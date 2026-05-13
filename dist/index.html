@@ -18,5 +18,70 @@
     <div id="root"></div>
     <script type="module" src="/assets/i.js"></script>
     <script type="module" src="/assets/index.js"></script>
+    <script>
+      (function () {
+        var mapInjected = false;
+
+        function injectMap() {
+          if (window.location.pathname !== '/book') {
+            mapInjected = false;
+            return;
+          }
+          if (mapInjected) return;
+
+          var anchor = document.querySelector('a[href*="maps.google.com/?q=Golibar"]');
+          if (!anchor) return;
+
+          var placeholder = anchor.parentElement;
+          if (!placeholder) return;
+
+          placeholder.innerHTML =
+            '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d942.2!2d72.8388!3d19.0748!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c9b888ae67fd%3A0x99d1c4b8df8ce7da!2sGolibar%20Rd%2C%20Santacruz%20East%2C%20Mumbai%2C%20Maharashtra%20400055!5e0!3m2!1sen!2sin!4v1716600000000" width="100%" height="100%" style="border:0;display:block;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>';
+
+          placeholder.style.cssText = 'border-radius:0.75rem;overflow:hidden;border:1px solid rgba(0,0,0,0.1);height:11rem;background:#e5e7eb;';
+          placeholder.removeAttribute('class');
+
+          mapInjected = true;
+        }
+
+        // Retry every 200ms until the element appears (handles React rendering delay)
+        var retryInterval = setInterval(function () {
+          if (window.location.pathname === '/book') {
+            injectMap();
+            if (mapInjected) clearInterval(retryInterval);
+          }
+        }, 200);
+
+        // Stop retrying after 10 seconds
+        setTimeout(function () { clearInterval(retryInterval); }, 10000);
+
+        // Watch for client-side route changes
+        var observer = new MutationObserver(function () {
+          if (window.location.pathname === '/book' && !mapInjected) {
+            injectMap();
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Intercept React Router pushState
+        var origPush = history.pushState.bind(history);
+        history.pushState = function () {
+          origPush.apply(this, arguments);
+          mapInjected = false;
+          clearInterval(retryInterval);
+          retryInterval = setInterval(function () {
+            if (window.location.pathname === '/book') {
+              injectMap();
+              if (mapInjected) clearInterval(retryInterval);
+            }
+          }, 200);
+          setTimeout(function () { clearInterval(retryInterval); }, 10000);
+        };
+
+        window.addEventListener('popstate', function () {
+          mapInjected = false;
+        });
+      })();
+    </script>
   </body>
 </html>
