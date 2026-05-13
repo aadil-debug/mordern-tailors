@@ -1,5 +1,1 @@
-{pkgs}: {
-  deps = [
-    pkgs.unzip
-  ];
-}
+
