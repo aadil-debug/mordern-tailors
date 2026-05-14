@@ -344,5 +344,74 @@
         });
       })();
     </script>
+    <script>
+      (function () {
+        var sloganDone = false;
+        var footerDone = false;
+
+        function injectSlogan() {
+          if (window.location.pathname !== '/') { sloganDone = false; return; }
+          if (sloganDone) return;
+          var paras = document.querySelectorAll('p');
+          var descPara = null;
+          for (var i = 0; i < paras.length; i++) {
+            if (paras[i].textContent.indexOf('Custom tailoring for men') !== -1) {
+              descPara = paras[i];
+              break;
+            }
+          }
+          if (!descPara) return;
+          var slogan = document.createElement('p');
+          slogan.style.cssText = 'font-style:italic;font-size:1.15rem;color:rgba(255,255,255,0.92);margin-bottom:1.25rem;font-family:Georgia,serif;letter-spacing:0.01em;line-height:1.5;';
+          slogan.textContent = '\u201cGod made a man, but the tailor made him a Gentleman.\u201d';
+          descPara.parentNode.insertBefore(slogan, descPara);
+          sloganDone = true;
+        }
+
+        function injectFooterInfo() {
+          if (footerDone) return;
+          var footer = document.querySelector('footer');
+          if (!footer) return;
+          var firstCol = footer.querySelector('[class*="md:col-span-1"]');
+          if (!firstCol) return;
+          var existing = firstCol.querySelector('[data-mt-owner]');
+          if (existing) { footerDone = true; return; }
+          var ownerBlock = document.createElement('div');
+          ownerBlock.setAttribute('data-mt-owner', '1');
+          ownerBlock.style.cssText = 'margin-top:0.75rem;font-size:0.85rem;line-height:1.7;color:rgba(255,255,255,0.7);';
+          ownerBlock.innerHTML =
+            '<span style="display:block;color:rgba(255,255,255,0.55);font-size:0.7rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.2rem;">Proprietor</span>' +
+            '<span style="display:block;font-weight:600;color:rgba(255,255,255,0.9);">Fazal Shaikh</span>' +
+            '<a href="mailto:modernbespoketailor@gmail.com" style="display:block;color:rgba(245,166,35,0.9);text-decoration:none;word-break:break-all;margin-top:0.2rem;">modernbespoketailor@gmail.com</a>';
+          firstCol.appendChild(ownerBlock);
+          footerDone = true;
+        }
+
+        function runAll() {
+          injectSlogan();
+          injectFooterInfo();
+        }
+
+        var interval = setInterval(runAll, 200);
+        setTimeout(function () { clearInterval(interval); }, 10000);
+
+        var obs = new MutationObserver(runAll);
+        obs.observe(document.body, { childList: true, subtree: true });
+
+        var origPush = history.pushState.bind(history);
+        history.pushState = function () {
+          origPush.apply(this, arguments);
+          sloganDone = false;
+          footerDone = false;
+          clearInterval(interval);
+          interval = setInterval(runAll, 200);
+          setTimeout(function () { clearInterval(interval); }, 10000);
+        };
+        window.addEventListener('popstate', function () {
+          sloganDone = false;
+          footerDone = false;
+        });
+      })();
+    </script>
   </body>
 </html>
