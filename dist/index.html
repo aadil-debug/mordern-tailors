@@ -179,5 +179,88 @@
         });
       })();
     </script>
+    <script>
+      (function () {
+        var videoInjected = false;
+
+        function injectVideo() {
+          if (window.location.pathname !== '/about') {
+            videoInjected = false;
+            return;
+          }
+          if (videoInjected) return;
+
+          var headings = document.querySelectorAll('h2, h3, p, span');
+          var journeyHeading = null;
+          for (var i = 0; i < headings.length; i++) {
+            if (headings[i].textContent.trim() === 'Our Journey') {
+              journeyHeading = headings[i];
+              break;
+            }
+          }
+          if (!journeyHeading) return;
+
+          var timeline = null;
+          var node = journeyHeading;
+          for (var lvl = 0; lvl < 6; lvl++) {
+            node = node.parentElement;
+            if (!node) break;
+            var candidate = node.querySelector('[class*="space-y-6"]');
+            if (candidate && candidate !== journeyHeading.closest('[class*="space-y-6"]')) {
+              timeline = candidate;
+              break;
+            }
+          }
+          if (!timeline) return;
+
+          timeline.innerHTML =
+            '<div style="width:100%;max-width:800px;margin:0 auto;border-radius:1rem;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);background:#000;">' +
+              '<video controls playsinline style="width:100%;display:block;border-radius:1rem;">' +
+                '<source src="/journey.mp4" type="video/mp4">' +
+                'Your browser does not support the video tag.' +
+              '</video>' +
+            '</div>';
+
+          timeline.removeAttribute('class');
+          timeline.style.cssText = 'padding: 1rem 0;';
+
+          videoInjected = true;
+        }
+
+        var retryInterval = setInterval(function () {
+          if (window.location.pathname === '/about') {
+            injectVideo();
+            if (videoInjected) clearInterval(retryInterval);
+          }
+        }, 200);
+
+        setTimeout(function () { clearInterval(retryInterval); }, 10000);
+
+        var observer = new MutationObserver(function () {
+          if (window.location.pathname === '/about' && !videoInjected) {
+            injectVideo();
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        var origPush = history.pushState.bind(history);
+        history.pushState = function () {
+          origPush.apply(this, arguments);
+          videoInjected = false;
+          clearInterval(retryInterval);
+          retryInterval = setInterval(function () {
+            if (window.location.pathname === '/about') {
+              injectVideo();
+              if (videoInjected) clearInterval(retryInterval);
+            }
+          }, 200);
+          setTimeout(function () { clearInterval(retryInterval); }, 10000);
+        };
+
+        window.addEventListener('popstate', function () {
+          videoInjected = false;
+        });
+      })();
+    </script>
   </body>
 </html>
