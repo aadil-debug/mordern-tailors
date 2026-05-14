@@ -346,6 +346,57 @@
     </script>
     <script>
       (function () {
+        var sliderDone = false;
+        var IMAGES = [
+          'https://images.unsplash.com/photo-1637137659416-d8112dbc46d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1440',
+          'https://images.unsplash.com/photo-1622621944707-e2e31c4e5695?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1440',
+          'https://images.unsplash.com/photo-1673201229733-69d19c5c4a87?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1440',
+          'https://images.unsplash.com/photo-1693743472699-a0264203ac56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1440',
+          'https://images.unsplash.com/photo-1760080838961-4208536db385?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1440'
+        ];
+
+        function injectSlider() {
+          if (sliderDone) return;
+          var heroImg = document.querySelector('img[src*="photo-1637137659416"]');
+          if (!heroImg) return;
+          var container = heroImg.parentElement;
+          if (!container) return;
+
+          var style = document.createElement('style');
+          style.textContent =
+            '@keyframes mt-fade{0%{opacity:1}' +
+            '18%{opacity:1}20%{opacity:0}98%{opacity:0}100%{opacity:1}}' +
+            '.mt-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.08);opacity:0;animation:mt-fade ' + (IMAGES.length * 4) + 's linear infinite;}';
+          document.head.appendChild(style);
+
+          heroImg.style.display = 'none';
+
+          IMAGES.forEach(function (src, idx) {
+            var img = document.createElement('img');
+            img.src = src;
+            img.alt = 'Modern Tailors Santacruz Mumbai';
+            img.className = 'mt-slide';
+            img.style.animationDelay = (-((IMAGES.length - idx) * 4 - 4)) + 's';
+            container.insertBefore(img, container.firstChild);
+          });
+
+          sliderDone = true;
+        }
+
+        var sliderInterval = setInterval(function () {
+          injectSlider();
+          if (sliderDone) clearInterval(sliderInterval);
+        }, 200);
+        setTimeout(function () { clearInterval(sliderInterval); }, 10000);
+
+        var sliderObs = new MutationObserver(function () {
+          if (!sliderDone) injectSlider();
+        });
+        sliderObs.observe(document.body, { childList: true, subtree: true });
+      })();
+    </script>
+    <script>
+      (function () {
         var sloganDone = false;
         var footerDone = false;
 
@@ -380,8 +431,8 @@
 
           var slogan = document.createElement('h1');
           slogan.setAttribute('data-mt-slogan', '1');
-          slogan.style.cssText = 'font-family:Georgia,serif;font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:700;color:#fff;line-height:1.3;margin-bottom:1.25rem;font-style:italic;text-shadow:0 2px 12px rgba(0,0,0,0.4);';
-          slogan.textContent = '\u201cGod made a man, but the tailor made him a Gentleman.\u201d';
+          slogan.style.cssText = 'font-family:Georgia,serif;font-size:clamp(2.6rem,6vw,4.5rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:0.5rem;font-style:normal;text-shadow:0 2px 16px rgba(0,0,0,0.35);letter-spacing:-0.01em;';
+          slogan.innerHTML = 'God made a man, but the tailor<br>made him a <em style="color:#f5a623;font-style:normal;">Gentleman.</em>';
           descPara.parentNode.insertBefore(slogan, descPara);
           sloganDone = true;
         }
