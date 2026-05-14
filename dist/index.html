@@ -262,5 +262,87 @@
         });
       })();
     </script>
+    <script>
+      (function () {
+        var missionInjected = false;
+
+        function injectMission() {
+          if (window.location.pathname !== '/about') {
+            missionInjected = false;
+            return;
+          }
+          if (missionInjected) return;
+
+          var headings = document.querySelectorAll('h2');
+          var journeyH2 = null;
+          for (var i = 0; i < headings.length; i++) {
+            if (headings[i].textContent.trim() === 'How We Got Here') {
+              journeyH2 = headings[i];
+              break;
+            }
+          }
+          if (!journeyH2) return;
+
+          var journeySection = journeyH2.closest('section') || journeyH2.parentElement;
+          while (journeySection && journeySection.tagName !== 'SECTION' && journeySection.parentElement && journeySection.parentElement.tagName !== 'MAIN' && journeySection.parentElement !== document.body) {
+            journeySection = journeySection.parentElement;
+          }
+          if (!journeySection) return;
+
+          var missionSection = document.createElement('section');
+          missionSection.style.cssText = 'padding: 5rem 1.5rem; background: #fff;';
+          missionSection.innerHTML =
+            '<div style="max-width:900px;margin:0 auto;">' +
+              '<div style="text-align:center;margin-bottom:2.5rem;">' +
+                '<span style="display:inline-block;background:#f5a623;color:#fff;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.35rem 1rem;border-radius:9999px;margin-bottom:1rem;">Our Mission</span>' +
+                '<h2 style="font-family:Georgia,serif;font-size:2rem;font-weight:700;color:#1a1a2e;margin:0;">What We Stand For</h2>' +
+              '</div>' +
+              '<div style="width:100%;max-width:800px;margin:0 auto;border-radius:1rem;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.18);background:#000;">' +
+                '<video controls playsinline style="width:100%;display:block;border-radius:1rem;">' +
+                  '<source src="/mission.mp4" type="video/mp4">' +
+                  'Your browser does not support the video tag.' +
+                '</video>' +
+              '</div>' +
+            '</div>';
+
+          journeySection.parentElement.insertBefore(missionSection, journeySection.nextSibling);
+          missionInjected = true;
+        }
+
+        var retryInterval = setInterval(function () {
+          if (window.location.pathname === '/about') {
+            injectMission();
+            if (missionInjected) clearInterval(retryInterval);
+          }
+        }, 200);
+
+        setTimeout(function () { clearInterval(retryInterval); }, 10000);
+
+        var observer = new MutationObserver(function () {
+          if (window.location.pathname === '/about' && !missionInjected) {
+            injectMission();
+          }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        var origPush = history.pushState.bind(history);
+        history.pushState = function () {
+          origPush.apply(this, arguments);
+          missionInjected = false;
+          clearInterval(retryInterval);
+          retryInterval = setInterval(function () {
+            if (window.location.pathname === '/about') {
+              injectMission();
+              if (missionInjected) clearInterval(retryInterval);
+            }
+          }, 200);
+          setTimeout(function () { clearInterval(retryInterval); }, 10000);
+        };
+
+        window.addEventListener('popstate', function () {
+          missionInjected = false;
+        });
+      })();
+    </script>
   </body>
 </html>
