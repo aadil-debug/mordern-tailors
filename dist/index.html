@@ -352,8 +352,9 @@
         function injectSlogan() {
           if (window.location.pathname !== '/') { sloganDone = false; return; }
           if (sloganDone) return;
-          var paras = document.querySelectorAll('p');
+
           var descPara = null;
+          var paras = document.querySelectorAll('p');
           for (var i = 0; i < paras.length; i++) {
             if (paras[i].textContent.indexOf('Custom tailoring for men') !== -1) {
               descPara = paras[i];
@@ -361,8 +362,25 @@
             }
           }
           if (!descPara) return;
-          var slogan = document.createElement('p');
-          slogan.style.cssText = 'font-style:italic;font-size:1.15rem;color:rgba(255,255,255,0.92);margin-bottom:1.25rem;font-family:Georgia,serif;letter-spacing:0.01em;line-height:1.5;';
+
+          var allEls = document.querySelectorAll('h1,h2,h3,h4,h5,h6,div,span');
+          for (var j = 0; j < allEls.length; j++) {
+            var t = allEls[j].childNodes;
+            var direct = '';
+            for (var k = 0; k < t.length; k++) {
+              if (t[k].nodeType === 3) direct += t[k].textContent;
+            }
+            if (direct.indexOf('Clothes That Fit') !== -1 || allEls[j].textContent.trim() === 'Every Single Time.') {
+              allEls[j].style.display = 'none';
+            }
+          }
+
+          var existing = document.querySelector('[data-mt-slogan]');
+          if (existing) { sloganDone = true; return; }
+
+          var slogan = document.createElement('h1');
+          slogan.setAttribute('data-mt-slogan', '1');
+          slogan.style.cssText = 'font-family:Georgia,serif;font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:700;color:#fff;line-height:1.3;margin-bottom:1.25rem;font-style:italic;text-shadow:0 2px 12px rgba(0,0,0,0.4);';
           slogan.textContent = '\u201cGod made a man, but the tailor made him a Gentleman.\u201d';
           descPara.parentNode.insertBefore(slogan, descPara);
           sloganDone = true;
