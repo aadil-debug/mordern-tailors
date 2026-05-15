@@ -482,5 +482,161 @@
         });
       })();
     </script>
+    <script>
+      (function () {
+        var injecting = false;
+
+        var NEW_ITEMS = [
+          // Lehenga Choli (1 more)
+          { photo: '1583391733956-3750e0ff4e8b', alt: 'Bridal lehenga choli red embroidery custom stitching Mumbai', label: 'Lehenga Choli' },
+
+          // Corset Top (2 more)
+          { photo: '1515886657613-9f3515b0c78f', alt: 'Corset top custom stitched fashion Santacruz', label: 'Corset Top' },
+          { photo: '1524504388940-b1c1722653e0', alt: 'Fitted corset top tailored outfit Mumbai', label: 'Corset Top' },
+
+          // Western Top (3)
+          { photo: '1469334031218-e382a71b716b', alt: 'Western top custom stitching Mumbai tailor', label: 'Western Top' },
+          { photo: '1496747611176-843222e1e57c', alt: 'Fashion western top tailored Santacruz', label: 'Western Top' },
+          { photo: '1558618666-fcd25c85cd64', alt: 'Western style outfit custom stitched Mumbai', label: 'Western Top' },
+
+          // Gown (2 more)
+          { photo: '1566479179817-c0c5e2be3f87', alt: 'Elegant evening gown custom stitched Mumbai', label: 'Gown' },
+          { photo: '1515347619252-60a4bf4fff4f', alt: 'Formal gown tailored Santacruz Mumbai', label: 'Gown' },
+
+          // Blazer (3)
+          { photo: '1591047139829-d91aecb6caea', alt: "Women's blazer custom tailored Mumbai", label: 'Blazer' },
+          { photo: '1551232864-3f0890e580d9', alt: 'Fashion blazer stitched Santacruz Mumbai', label: 'Blazer' },
+          { photo: '1594938298603-c8148c4b05cc', alt: 'Professional blazer custom tailored Mumbai', label: 'Blazer' },
+
+          // Tops (2)
+          { photo: '1618354691373-d851c5c3a990', alt: 'Casual tops custom stitched Mumbai tailor', label: 'Tops' },
+          { photo: '1529139574466-a303027c1d8b', alt: "Women's fashion tops tailored Santacruz", label: 'Tops' },
+
+          // Bottoms (2)
+          { photo: '1594900043978-55d36a449c5a', alt: "Women's bottoms trousers custom stitched Mumbai", label: 'Bottoms' },
+          { photo: '1542621334-a254cf47733d', alt: 'Custom tailored bottoms wide leg pants Mumbai', label: 'Bottoms' },
+
+          // Blouse (2 more)
+          { photo: '1591604021695-0c69b7c05981', alt: 'Indian blouse custom stitched Mumbai tailor', label: 'Blouse' },
+          { photo: '1605763240000-7e93b172d754', alt: 'Designer blouse tailored Santacruz East', label: 'Blouse' },
+
+          // Padded Blouse (2 more)
+          { photo: '1595777457583-95e059d581b8', alt: 'Padded blouse custom stitching Mumbai fashion', label: 'Padded Blouse' },
+          { photo: '1581044777550-4cfa65f05e40', alt: 'Padded blouse embroidery detail tailored Mumbai', label: 'Padded Blouse' },
+
+          // Punjabi Dress (2 more)
+          { photo: '1537131747906-30f87c9ed2e3', alt: 'Punjabi dress salwar kameez custom stitched Mumbai', label: 'Punjabi Dress' },
+          { photo: '1617891718670-72edff4b1ce3', alt: 'Salwar kameez Punjabi dress tailored Santacruz', label: 'Punjabi Dress' },
+
+          // Ready to Wear Saree (1 more)
+          { photo: '1512436991641-6745cdb1723f', alt: 'Ready to wear saree pre-draped stitched Mumbai', label: 'Ready to Wear Saree' }
+        ];
+
+        function buildUrl(photo, w) {
+          return 'https://images.unsplash.com/photo-' + photo + '?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=' + w;
+        }
+
+        function getWomenGrid() {
+          if (window.location.pathname !== '/gallery') return null;
+          var headings = document.querySelectorAll('h2, h3, h4');
+          for (var i = 0; i < headings.length; i++) {
+            if (headings[i].textContent.trim() === "Women's Apparel") {
+              var node = headings[i];
+              for (var lvl = 0; lvl < 8; lvl++) {
+                node = node.parentElement;
+                if (!node) break;
+                var g = node.querySelector('[class*="grid"]');
+                if (g && g.children.length > 0) return g;
+              }
+            }
+          }
+          return null;
+        }
+
+        function injectGallery() {
+          if (injecting) return;
+          var grid = getWomenGrid();
+          if (!grid) return;
+          if (grid.querySelector('[data-mt-gal-injected]')) return;
+
+          injecting = true;
+          var templateCard = grid.firstElementChild;
+          if (!templateCard) { injecting = false; return; }
+
+          var frag = document.createDocumentFragment();
+          NEW_ITEMS.forEach(function (item) {
+            var card = templateCard.cloneNode(true);
+            card.setAttribute('data-mt-gal-injected', '1');
+            card.removeAttribute('data-framer-name');
+
+            var img = card.querySelector('img');
+            if (img) {
+              img.src = buildUrl(item.photo, 600);
+              img.srcset = '';
+              img.alt = item.alt;
+              img.removeAttribute('loading');
+            }
+
+            var allText = card.querySelectorAll('span, p, div');
+            for (var j = 0; j < allText.length; j++) {
+              var el = allText[j];
+              var direct = '';
+              el.childNodes.forEach(function (n) { if (n.nodeType === 3) direct += n.textContent; });
+              if (direct.trim().length > 0 && direct.trim().length < 60 && el.children.length === 0) {
+                el.textContent = item.label;
+                break;
+              }
+            }
+            frag.appendChild(card);
+          });
+          grid.appendChild(frag);
+
+          var womenHeading = null;
+          var allH = document.querySelectorAll('h2, h3, h4');
+          for (var k = 0; k < allH.length; k++) {
+            if (allH[k].textContent.trim() === "Women's Apparel") { womenHeading = allH[k]; break; }
+          }
+          if (womenHeading && womenHeading.parentElement) {
+            var siblings = womenHeading.parentElement.querySelectorAll('*');
+            for (var m = 0; m < siblings.length; m++) {
+              if (/\d+\s*piece/.test(siblings[m].textContent) && siblings[m].children.length === 0) {
+                var base = parseInt(siblings[m].textContent.match(/\d+/)[0], 10) || 10;
+                if (base < 20) siblings[m].textContent = (base + NEW_ITEMS.length) + ' pieces';
+                break;
+              }
+            }
+          }
+
+          injecting = false;
+        }
+
+        var observer = new MutationObserver(function () {
+          if (window.location.pathname === '/gallery') injectGallery();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        var retryInterval = setInterval(function () {
+          if (window.location.pathname === '/gallery') injectGallery();
+        }, 300);
+        setTimeout(function () { clearInterval(retryInterval); }, 20000);
+
+        var origPush = history.pushState.bind(history);
+        history.pushState = function () {
+          origPush.apply(this, arguments);
+          clearInterval(retryInterval);
+          retryInterval = setInterval(function () {
+            if (window.location.pathname === '/gallery') injectGallery();
+          }, 300);
+          setTimeout(function () { clearInterval(retryInterval); }, 20000);
+        };
+        window.addEventListener('popstate', function () {
+          clearInterval(retryInterval);
+          retryInterval = setInterval(function () {
+            if (window.location.pathname === '/gallery') injectGallery();
+          }, 300);
+          setTimeout(function () { clearInterval(retryInterval); }, 20000);
+        });
+      })();
+    </script>
   </body>
 </html>
