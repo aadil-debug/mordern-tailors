@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Modern Tailors</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
+
+    /* LOGIN */
+    #login-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: #1a1a1a;
+    }
+    .login-card {
+      background: #fff; border-radius: 12px; padding: 48px 40px;
+      width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    .login-logo {
+      width: 56px; height: 56px; background: #b8962e; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 22px; color: #fff; font-weight: 700;
+    }
+    .login-card h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .login-card p { color: #666; font-size: 14px; margin-bottom: 32px; }
+    .login-card input {
+      width: 100%; padding: 12px 16px; border: 1.5px solid #ddd; border-radius: 8px;
+      font-size: 16px; outline: none; transition: border-color 0.2s;
+      margin-bottom: 12px;
+    }
+    .login-card input:focus { border-color: #b8962e; }
+    .login-card button {
+      width: 100%; padding: 13px; background: #b8962e; color: #fff;
+      border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .login-card button:hover { background: #9a7d26; }
+    .login-error { color: #e53e3e; font-size: 13px; margin-top: 8px; display: none; }
+
+    /* ADMIN */
+    #admin-screen { display: none; }
+    .admin-header {
+      background: #1a1a1a; color: #fff; padding: 16px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .admin-header .brand { display: flex; align-items: center; gap: 12px; }
+    .admin-header .logo {
+      width: 36px; height: 36px; background: #b8962e; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff;
+    }
+    .admin-header h1 { font-size: 17px; font-weight: 600; }
+    .admin-header p { font-size: 12px; color: #999; }
+    .logout-btn {
+      background: #333; color: #fff; border: none; border-radius: 8px;
+      padding: 8px 18px; font-size: 14px; cursor: pointer; transition: background 0.2s;
+    }
+    .logout-btn:hover { background: #555; }
+
+    .admin-body { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+    .section-heading {
+      font-size: 20px; font-weight: 700; margin: 32px 0 16px;
+      padding-bottom: 10px; border-bottom: 2px solid #e5e5e5;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-heading .count {
+      background: #b8962e; color: #fff; font-size: 12px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px;
+    }
+
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;
+    }
+
+    .gallery-card {
+      background: #fff; border-radius: 10px; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: box-shadow 0.2s;
+    }
+    .gallery-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+    .card-img-wrap { position: relative; aspect-ratio: 3/4; overflow: hidden; background: #f0f0f0; }
+    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-info { padding: 12px; }
+    .card-label { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .card-id { font-size: 11px; color: #999; margin-bottom: 10px; }
+    .replace-btn {
+      width: 100%; padding: 8px; background: #f5f5f5; border: 1.5px solid #ddd;
+      border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: all 0.2s; color: #333;
+    }
+    .replace-btn:hover { background: #b8962e; border-color: #b8962e; color: #fff; }
+    .replace-btn.uploading { background: #eee; color: #999; cursor: wait; pointer-events: none; }
+    .replace-btn.success { background: #22c55e; border-color: #22c55e; color: #fff; }
+
+    .overlay-dim {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+      display: none; align-items: center; justify-content: center;
+    }
+    .overlay-dim.active { display: flex; }
+    .preview-modal {
+      background: #fff; border-radius: 12px; padding: 32px;
+      max-width: 420px; width: 90%; text-align: center;
+    }
+    .preview-modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .preview-modal p { font-size: 13px; color: #666; margin-bottom: 20px; }
+    .preview-imgs { display: flex; gap: 12px; margin-bottom: 20px; }
+    .preview-imgs .pane { flex: 1; }
+    .preview-imgs .pane span { font-size: 11px; color: #888; display: block; margin-bottom: 6px; }
+    .preview-imgs img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; border: 1.5px solid #eee; }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-actions button { flex: 1; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; }
+    .btn-cancel { background: #f0f0f0; color: #444; }
+    .btn-confirm { background: #b8962e; color: #fff; }
+    .btn-cancel:hover { background: #e0e0e0; }
+    .btn-confirm:hover { background: #9a7d26; }
+
+    #loading-screen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: #f5f5f5; flex-direction: column; gap: 16px;
+    }
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid #ddd;
+      border-top-color: #b8962e; border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 14px; color: #888; }
+
+    input[type="file"] { display: none; }
+  </style>
+</head>
+<body>
+
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <p class="loading-text">Loading...</p>
+</div>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">MT</div>
+    <h1>Modern Tailors</h1>
+    <p>Admin Panel — Gallery Management</p>
+    <input type="password" id="password-input" placeholder="Enter your password" />
+    <button id="login-btn">Log In</button>
+    <p class="login-error" id="login-error">Wrong password. Please try again.</p>
+  </div>
+</div>
+
+<div id="admin-screen">
+  <div class="admin-header">
+    <div class="brand">
+      <div class="logo">MT</div>
+      <div>
+        <h1>Gallery Admin</h1>
+        <p>Modern Tailors — Santacruz East</p>
+      </div>
+    </div>
+    <button class="logout-btn" id="logout-btn">Log Out</button>
+  </div>
+  <div class="admin-body" id="gallery-container">
+    <div style="text-align:center;padding:60px;color:#888">Loading gallery...</div>
+  </div>
+</div>
+
+<div class="overlay-dim" id="preview-overlay">
+  <div class="preview-modal">
+    <h2 id="modal-label">Replace Image</h2>
+    <p id="modal-category"></p>
+    <div class="preview-imgs">
+      <div class="pane">
+        <span>Current</span>
+        <img id="modal-current" src="" alt="current" />
+      </div>
+      <div class="pane">
+        <span>New</span>
+        <img id="modal-new" src="" alt="new" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="modal-cancel">Cancel</button>
+      <button class="btn-confirm" id="modal-confirm">Replace</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="file-input" accept="image/*" />
+
+<script>
+  const loadingScreen = document.getElementById('loading-screen');
+  const loginScreen = document.getElementById('login-screen');
+  const adminScreen = document.getElementById('admin-screen');
+  const loginBtn = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  const loginError = document.getElementById('login-error');
+  const passwordInput = document.getElementById('password-input');
+  const galleryContainer = document.getElementById('gallery-container');
+  const fileInput = document.getElementById('file-input');
+  const previewOverlay = document.getElementById('preview-overlay');
+  const modalLabel = document.getElementById('modal-label');
+  const modalCategory = document.getElementById('modal-category');
+  const modalCurrent = document.getElementById('modal-current');
+  const modalNew = document.getElementById('modal-new');
+  const modalCancel = document.getElementById('modal-cancel');
+  const modalConfirm = document.getElementById('modal-confirm');
+
+  let pendingItemId = null;
+  let pendingFileData = null;
+  let pendingFileName = null;
+  let pendingCard = null;
+  let pendingBtn = null;
+
+  async function checkAuth() {
+    try {
+      const res = await fetch('/admin/gallery-data');
+      if (res.ok) {
+        const items = await res.json();
+        showAdmin(items);
+      } else {
+        showLogin();
+      }
+    } catch {
+      showLogin();
+    }
+  }
+
+  function showLogin() {
+    loadingScreen.style.display = 'none';
+    loginScreen.style.display = 'flex';
+    adminScreen.style.display = 'none';
+  }
+
+  function showAdmin(items) {
+    loadingScreen.style.display = 'none';
+    loginScreen.style.display = 'none';
+    adminScreen.style.display = 'block';
+    renderGallery(items);
+  }
+
+  function renderGallery(items) {
+    const categories = {};
+    items.forEach(item => {
+      if (!categories[item.category]) categories[item.category] = [];
+      categories[item.category].push(item);
+    });
+
+    galleryContainer.innerHTML = '';
+    Object.entries(categories).forEach(([cat, catItems]) => {
+      const section = document.createElement('div');
+      const heading = document.createElement('div');
+      heading.className = 'section-heading';
+      heading.innerHTML = `${cat} <span class="count">${catItems.length}</span>`;
+      section.appendChild(heading);
+
+      const grid = document.createElement('div');
+      grid.className = 'gallery-grid';
+
+      catItems.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'gallery-card';
+        card.dataset.id = item.id;
+
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'card-img-wrap';
+        const img = document.createElement('img');
+        img.src = item.thumb || item.src;
+        img.alt = item.label;
+        img.onerror = () => { img.src = item.src; };
+        imgWrap.appendChild(img);
+
+        const info = document.createElement('div');
+        info.className = 'card-info';
+        info.innerHTML = `
+          <div class="card-label">${item.label}</div>
+          <div class="card-id">ID #${item.id}</div>
+          <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">
+            Replace Photo
+          </button>
+        `;
+
+        card.appendChild(imgWrap);
+        card.appendChild(info);
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      galleryContainer.appendChild(section);
+    });
+
+    galleryContainer.querySelectorAll('.replace-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        pendingItemId = btn.dataset.id;
+        pendingCard = btn.closest('.gallery-card');
+        pendingBtn = btn;
+        fileInput.click();
+      });
+    });
+  }
+
+  fileInput.addEventListener('change', async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    fileInput.value = '';
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      const base64 = dataUrl.split(',')[1];
+      pendingFileData = base64;
+      pendingFileName = file.name;
+
+      const currentSrc = pendingCard.querySelector('img').src;
+      modalLabel.textContent = pendingBtn.dataset.label;
+      modalCategory.textContent = pendingBtn.dataset.cat;
+      modalCurrent.src = currentSrc;
+      modalNew.src = dataUrl;
+      previewOverlay.classList.add('active');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  modalCancel.addEventListener('click', () => {
+    previewOverlay.classList.remove('active');
+    pendingItemId = null;
+    pendingFileData = null;
+    pendingFileName = null;
+    pendingCard = null;
+    pendingBtn = null;
+  });
+
+  modalConfirm.addEventListener('click', async () => {
+    if (!pendingItemId || !pendingFileData) return;
+    previewOverlay.classList.remove('active');
+
+    pendingBtn.textContent = 'Uploading...';
+    pendingBtn.className = 'replace-btn uploading';
+
+    try {
+      const res = await fetch('/admin/update-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          itemId: pendingItemId,
+          fileData: pendingFileData,
+          fileName: pendingFileName,
+        })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const img = pendingCard.querySelector('img');
+        img.src = data.src + '?t=' + Date.now();
+        pendingBtn.textContent = 'Updated!';
+        pendingBtn.className = 'replace-btn success';
+        setTimeout(() => {
+          pendingBtn.textContent = 'Replace Photo';
+          pendingBtn.className = 'replace-btn';
+          pendingBtn.dataset.src = data.src;
+        }, 2500);
+      } else {
+        pendingBtn.textContent = 'Replace Photo';
+        pendingBtn.className = 'replace-btn';
+        alert('Upload failed: ' + (data.error || 'Unknown error'));
+      }
+    } catch {
+      pendingBtn.textContent = 'Replace Photo';
+      pendingBtn.className = 'replace-btn';
+      alert('Upload failed. Please try again.');
+    }
+
+    pendingItemId = null;
+    pendingFileData = null;
+    pendingFileName = null;
+    pendingCard = null;
+    pendingBtn = null;
+  });
+
+  loginBtn.addEventListener('click', async () => {
+    const password = passwordInput.value;
+    if (!password) return;
+    loginBtn.textContent = 'Logging in...';
+    loginBtn.disabled = true;
+    loginError.style.display = 'none';
+
+    try {
+      const res = await fetch('/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const galleryRes = await fetch('/admin/gallery-data');
+        const items = await galleryRes.json();
+        showAdmin(items);
+      } else {
+        loginError.style.display = 'block';
+        loginBtn.textContent = 'Log In';
+        loginBtn.disabled = false;
+        passwordInput.value = '';
+      }
+    } catch {
+      loginError.style.display = 'block';
+      loginBtn.textContent = 'Log In';
+      loginBtn.disabled = false;
+    }
+  });
+
+  passwordInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') loginBtn.click();
+  });
+
+  logoutBtn.addEventListener('click', async () => {
+    await fetch('/admin/logout', { method: 'POST' });
+    showLogin();
+    passwordInput.value = '';
+  });
+
+  checkAuth();
+</script>
+</body>
+</html>
