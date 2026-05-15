@@ -155,6 +155,39 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  if (urlPath === '/admin/reorder' && method === 'POST') {
+    if (!isAuthenticated(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Unauthorized' }));
+      return;
+    }
+    const body = await parseBody(req);
+    const { order } = body;
+    if (!Array.isArray(order)) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: 'Invalid order' }));
+      return;
+    }
+    let content = await readFile(join(DIST, 'assets/index.js'), 'utf8');
+    const itemRx = /\{id:(\d+),src:"[^"]+",thumb:"[^"]+",alt:"[^"]+",category:"[^"]+",label:"[^"]+"\}/g;
+    const allMatches = [...content.matchAll(itemRx)];
+    const idToText = {};
+    allMatches.forEach(m => { idToText[parseInt(m[1])] = m[0]; });
+    let newContent = '';
+    let lastIndex = 0;
+    allMatches.forEach((m, i) => {
+      newContent += content.slice(lastIndex, m.index);
+      const newId = order[i] !== undefined ? order[i] : parseInt(m[1]);
+      newContent += idToText[newId] || m[0];
+      lastIndex = m.index + m[0].length;
+    });
+    newContent += content.slice(lastIndex);
+    await writeFile(join(DIST, 'assets/index.js'), newContent);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
   if (urlPath === '/admin' && method === 'GET') {
     try {
       const data = await readFile(join(DIST, 'admin.html'));

@@ -6,127 +6,97 @@
   <title>Admin — Modern Tailors</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; min-height: 100vh; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f4f4; color: #1a1a1a; min-height: 100vh; }
 
     /* LOGIN */
-    #login-screen {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; background: #1a1a1a;
-    }
-    .login-card {
-      background: #fff; border-radius: 12px; padding: 48px 40px;
-      width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-      text-align: center;
-    }
-    .login-logo {
-      width: 56px; height: 56px; background: #b8962e; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 20px; font-size: 22px; color: #fff; font-weight: 700;
-    }
+    #login-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #1a1a1a; }
+    .login-card { background: #fff; border-radius: 14px; padding: 48px 40px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); text-align: center; }
+    .login-logo { width: 58px; height: 58px; background: #b8962e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 22px; color: #fff; font-weight: 700; }
     .login-card h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    .login-card p { color: #666; font-size: 14px; margin-bottom: 32px; }
-    .login-card input {
-      width: 100%; padding: 12px 16px; border: 1.5px solid #ddd; border-radius: 8px;
-      font-size: 16px; outline: none; transition: border-color 0.2s;
-      margin-bottom: 12px;
-    }
+    .login-card p { color: #777; font-size: 14px; margin-bottom: 32px; }
+    .login-card input { width: 100%; padding: 12px 16px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s; margin-bottom: 12px; }
     .login-card input:focus { border-color: #b8962e; }
-    .login-card button {
-      width: 100%; padding: 13px; background: #b8962e; color: #fff;
-      border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
-      cursor: pointer; transition: background 0.2s;
-    }
+    .login-card button { width: 100%; padding: 13px; background: #b8962e; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
     .login-card button:hover { background: #9a7d26; }
+    .login-card button:disabled { background: #ccc; cursor: wait; }
     .login-error { color: #e53e3e; font-size: 13px; margin-top: 8px; display: none; }
 
-    /* ADMIN */
+    /* HEADER */
     #admin-screen { display: none; }
-    .admin-header {
-      background: #1a1a1a; color: #fff; padding: 16px 32px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
-    }
-    .admin-header .brand { display: flex; align-items: center; gap: 12px; }
-    .admin-header .logo {
-      width: 36px; height: 36px; background: #b8962e; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700; color: #fff;
-    }
-    .admin-header h1 { font-size: 17px; font-weight: 600; }
-    .admin-header p { font-size: 12px; color: #999; }
-    .logout-btn {
-      background: #333; color: #fff; border: none; border-radius: 8px;
-      padding: 8px 18px; font-size: 14px; cursor: pointer; transition: background 0.2s;
-    }
-    .logout-btn:hover { background: #555; }
+    .admin-header { background: #1a1a1a; color: #fff; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 12px rgba(0,0,0,0.3); }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-logo { width: 36px; height: 36px; background: #b8962e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+    .header-title { font-size: 16px; font-weight: 600; }
+    .header-sub { font-size: 11px; color: #888; }
+    .header-right { display: flex; align-items: center; gap: 10px; }
 
-    .admin-body { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+    .save-btn { background: #b8962e; color: #fff; border: none; border-radius: 8px; padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: none; align-items: center; gap: 7px; transition: background 0.2s; }
+    .save-btn:hover { background: #9a7d26; }
+    .save-btn.visible { display: flex; }
+    .save-btn.saving { background: #888; cursor: wait; pointer-events: none; }
+    .save-btn.saved { background: #22c55e; pointer-events: none; }
 
-    .section-heading {
-      font-size: 20px; font-weight: 700; margin: 32px 0 16px;
-      padding-bottom: 10px; border-bottom: 2px solid #e5e5e5;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .section-heading .count {
-      background: #b8962e; color: #fff; font-size: 12px; font-weight: 600;
-      padding: 2px 8px; border-radius: 20px;
-    }
+    .logout-btn { background: #2d2d2d; color: #ccc; border: none; border-radius: 8px; padding: 9px 16px; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+    .logout-btn:hover { background: #444; color: #fff; }
 
-    .gallery-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px;
-    }
+    /* UNSAVED BANNER */
+    .unsaved-banner { background: #fffbeb; border-bottom: 2px solid #f59e0b; padding: 10px 28px; display: none; align-items: center; justify-content: space-between; font-size: 13px; color: #92400e; }
+    .unsaved-banner.visible { display: flex; }
+    .unsaved-banner strong { font-weight: 600; }
 
-    .gallery-card {
-      background: #fff; border-radius: 10px; overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: box-shadow 0.2s;
-    }
+    /* BODY */
+    .admin-body { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
+
+    .hint-box { background: #fff; border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 14px 18px; margin-bottom: 28px; font-size: 13px; color: #555; display: flex; align-items: center; gap: 10px; }
+    .hint-box .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+
+    .section-heading { font-size: 18px; font-weight: 700; margin: 32px 0 14px; padding-bottom: 10px; border-bottom: 2px solid #e5e5e5; display: flex; align-items: center; gap: 10px; }
+    .section-heading .count { background: #b8962e; color: #fff; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+
+    /* CARDS */
+    .gallery-card { background: #fff; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.07); transition: box-shadow 0.2s, transform 0.15s; cursor: grab; border: 2px solid transparent; user-select: none; }
     .gallery-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
-    .card-img-wrap { position: relative; aspect-ratio: 3/4; overflow: hidden; background: #f0f0f0; }
-    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .card-info { padding: 12px; }
-    .card-label { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-    .card-id { font-size: 11px; color: #999; margin-bottom: 10px; }
-    .replace-btn {
-      width: 100%; padding: 8px; background: #f5f5f5; border: 1.5px solid #ddd;
-      border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer;
-      transition: all 0.2s; color: #333;
-    }
-    .replace-btn:hover { background: #b8962e; border-color: #b8962e; color: #fff; }
-    .replace-btn.uploading { background: #eee; color: #999; cursor: wait; pointer-events: none; }
-    .replace-btn.success { background: #22c55e; border-color: #22c55e; color: #fff; }
+    .gallery-card.dragging { opacity: 0.4; cursor: grabbing; transform: scale(0.97); }
+    .gallery-card.drag-over { border-color: #b8962e; box-shadow: 0 0 0 3px rgba(184,150,46,0.25); }
 
-    .overlay-dim {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
-      display: none; align-items: center; justify-content: center;
-    }
+    .drag-handle { padding: 8px 12px 0; display: flex; align-items: center; gap: 5px; color: #ccc; font-size: 11px; cursor: grab; }
+    .drag-handle svg { flex-shrink: 0; }
+
+    .card-img-wrap { aspect-ratio: 3/4; overflow: hidden; background: #f0f0f0; margin: 6px 10px 0; border-radius: 6px; }
+    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+
+    .card-info { padding: 10px 12px 12px; }
+    .card-label { font-size: 13px; font-weight: 600; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-id { font-size: 11px; color: #aaa; margin-bottom: 9px; }
+
+    .replace-btn { width: 100%; padding: 8px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: #444; }
+    .replace-btn:hover { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
+    .replace-btn.uploading { background: #eee; color: #999; cursor: wait; pointer-events: none; }
+    .replace-btn.success { background: #22c55e; border-color: #22c55e; color: #fff; pointer-events: none; }
+
+    /* PREVIEW MODAL */
+    .overlay-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
     .overlay-dim.active { display: flex; }
-    .preview-modal {
-      background: #fff; border-radius: 12px; padding: 32px;
-      max-width: 420px; width: 90%; text-align: center;
-    }
-    .preview-modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-    .preview-modal p { font-size: 13px; color: #666; margin-bottom: 20px; }
-    .preview-imgs { display: flex; gap: 12px; margin-bottom: 20px; }
+    .preview-modal { background: #fff; border-radius: 14px; padding: 32px; max-width: 440px; width: 100%; text-align: center; }
+    .preview-modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .preview-modal .modal-cat { font-size: 12px; color: #888; margin-bottom: 22px; }
+    .preview-imgs { display: flex; gap: 14px; margin-bottom: 22px; }
     .preview-imgs .pane { flex: 1; }
-    .preview-imgs .pane span { font-size: 11px; color: #888; display: block; margin-bottom: 6px; }
+    .preview-imgs .pane span { font-size: 11px; color: #888; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
     .preview-imgs img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; border: 1.5px solid #eee; }
     .modal-actions { display: flex; gap: 10px; }
-    .modal-actions button { flex: 1; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; }
+    .modal-actions button { flex: 1; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s; }
     .btn-cancel { background: #f0f0f0; color: #444; }
-    .btn-confirm { background: #b8962e; color: #fff; }
     .btn-cancel:hover { background: #e0e0e0; }
+    .btn-confirm { background: #b8962e; color: #fff; }
     .btn-confirm:hover { background: #9a7d26; }
 
-    #loading-screen {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; background: #f5f5f5; flex-direction: column; gap: 16px;
-    }
-    .spinner {
-      width: 36px; height: 36px; border: 3px solid #ddd;
-      border-top-color: #b8962e; border-radius: 50%; animation: spin 0.8s linear infinite;
-    }
+    /* LOADING */
+    #loading-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f4f4f4; flex-direction: column; gap: 14px; }
+    .spinner { width: 36px; height: 36px; border: 3px solid #e0e0e0; border-top-color: #b8962e; border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-text { font-size: 14px; color: #888; }
 
     input[type="file"] { display: none; }
   </style>
@@ -135,7 +105,7 @@
 
 <div id="loading-screen">
   <div class="spinner"></div>
-  <p class="loading-text">Loading...</p>
+  <p style="font-size:14px;color:#999">Loading...</p>
 </div>
 
 <div id="login-screen">
@@ -151,33 +121,44 @@
 
 <div id="admin-screen">
   <div class="admin-header">
-    <div class="brand">
-      <div class="logo">MT</div>
+    <div class="header-left">
+      <div class="header-logo">MT</div>
       <div>
-        <h1>Gallery Admin</h1>
-        <p>Modern Tailors — Santacruz East</p>
+        <div class="header-title">Gallery Admin</div>
+        <div class="header-sub">Modern Tailors · Santacruz East</div>
       </div>
     </div>
-    <button class="logout-btn" id="logout-btn">Log Out</button>
+    <div class="header-right">
+      <button class="save-btn" id="save-order-btn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Save Order
+      </button>
+      <button class="logout-btn" id="logout-btn">Log Out</button>
+    </div>
   </div>
-  <div class="admin-body" id="gallery-container">
-    <div style="text-align:center;padding:60px;color:#888">Loading gallery...</div>
+
+  <div class="unsaved-banner" id="unsaved-banner">
+    <span><strong>Unsaved order changes</strong> — drag cards to reorder, then click Save Order to apply.</span>
+  </div>
+
+  <div class="admin-body">
+    <div class="hint-box">
+      <div class="dot"></div>
+      <span><strong>Changes here save directly to the project.</strong> Replace a photo by clicking "Replace Photo" on any card. Drag cards to reorder within or across sections, then hit Save Order.</span>
+    </div>
+    <div id="gallery-container">
+      <div style="text-align:center;padding:60px;color:#aaa">Loading gallery...</div>
+    </div>
   </div>
 </div>
 
 <div class="overlay-dim" id="preview-overlay">
   <div class="preview-modal">
-    <h2 id="modal-label">Replace Image</h2>
-    <p id="modal-category"></p>
+    <h2 id="modal-label"></h2>
+    <p class="modal-cat" id="modal-category"></p>
     <div class="preview-imgs">
-      <div class="pane">
-        <span>Current</span>
-        <img id="modal-current" src="" alt="current" />
-      </div>
-      <div class="pane">
-        <span>New</span>
-        <img id="modal-new" src="" alt="new" />
-      </div>
+      <div class="pane"><span>Current</span><img id="modal-current" src="" alt="current" /></div>
+      <div class="pane"><span>New</span><img id="modal-new" src="" alt="new" /></div>
     </div>
     <div class="modal-actions">
       <button class="btn-cancel" id="modal-cancel">Cancel</button>
@@ -189,41 +170,26 @@
 <input type="file" id="file-input" accept="image/*" />
 
 <script>
-  const loadingScreen = document.getElementById('loading-screen');
-  const loginScreen = document.getElementById('login-screen');
-  const adminScreen = document.getElementById('admin-screen');
-  const loginBtn = document.getElementById('login-btn');
-  const logoutBtn = document.getElementById('logout-btn');
-  const loginError = document.getElementById('login-error');
-  const passwordInput = document.getElementById('password-input');
-  const galleryContainer = document.getElementById('gallery-container');
-  const fileInput = document.getElementById('file-input');
-  const previewOverlay = document.getElementById('preview-overlay');
-  const modalLabel = document.getElementById('modal-label');
-  const modalCategory = document.getElementById('modal-category');
-  const modalCurrent = document.getElementById('modal-current');
-  const modalNew = document.getElementById('modal-new');
-  const modalCancel = document.getElementById('modal-cancel');
-  const modalConfirm = document.getElementById('modal-confirm');
+  const $ = id => document.getElementById(id);
+  const loadingScreen = $('loading-screen');
+  const loginScreen = $('login-screen');
+  const adminScreen = $('admin-screen');
+  const galleryContainer = $('gallery-container');
+  const unsavedBanner = $('unsaved-banner');
+  const saveOrderBtn = $('save-order-btn');
 
-  let pendingItemId = null;
-  let pendingFileData = null;
-  let pendingFileName = null;
-  let pendingCard = null;
-  let pendingBtn = null;
+  let pendingItemId = null, pendingFileData = null, pendingFileName = null;
+  let pendingCard = null, pendingBtn = null;
+  let hasUnsavedOrder = false;
+  let dragSrcCard = null;
 
+  // ── AUTH ────────────────────────────────────────────────
   async function checkAuth() {
     try {
       const res = await fetch('/admin/gallery-data');
-      if (res.ok) {
-        const items = await res.json();
-        showAdmin(items);
-      } else {
-        showLogin();
-      }
-    } catch {
-      showLogin();
-    }
+      if (res.ok) showAdmin(await res.json());
+      else showLogin();
+    } catch { showLogin(); }
   }
 
   function showLogin() {
@@ -239,6 +205,38 @@
     renderGallery(items);
   }
 
+  $('login-btn').addEventListener('click', async () => {
+    const pw = $('password-input').value;
+    if (!pw) return;
+    const btn = $('login-btn');
+    btn.textContent = 'Logging in...'; btn.disabled = true;
+    $('login-error').style.display = 'none';
+    try {
+      const res = await fetch('/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password: pw}) });
+      const data = await res.json();
+      if (data.ok) {
+        const gr = await fetch('/admin/gallery-data');
+        showAdmin(await gr.json());
+      } else {
+        $('login-error').style.display = 'block';
+        btn.textContent = 'Log In'; btn.disabled = false;
+        $('password-input').value = '';
+      }
+    } catch {
+      $('login-error').style.display = 'block';
+      btn.textContent = 'Log In'; btn.disabled = false;
+    }
+  });
+
+  $('password-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('login-btn').click(); });
+
+  $('logout-btn').addEventListener('click', async () => {
+    await fetch('/admin/logout', { method:'POST' });
+    showLogin();
+    $('password-input').value = '';
+  });
+
+  // ── GALLERY RENDER ──────────────────────────────────────
   function renderGallery(items) {
     const categories = {};
     items.forEach(item => {
@@ -247,8 +245,10 @@
     });
 
     galleryContainer.innerHTML = '';
+
     Object.entries(categories).forEach(([cat, catItems]) => {
       const section = document.createElement('div');
+
       const heading = document.createElement('div');
       heading.className = 'section-heading';
       heading.innerHTML = `${cat} <span class="count">${catItems.length}</span>`;
@@ -256,84 +256,179 @@
 
       const grid = document.createElement('div');
       grid.className = 'gallery-grid';
+      grid.dataset.category = cat;
 
-      catItems.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'gallery-card';
-        card.dataset.id = item.id;
-
-        const imgWrap = document.createElement('div');
-        imgWrap.className = 'card-img-wrap';
-        const img = document.createElement('img');
-        img.src = item.thumb || item.src;
-        img.alt = item.label;
-        img.onerror = () => { img.src = item.src; };
-        imgWrap.appendChild(img);
-
-        const info = document.createElement('div');
-        info.className = 'card-info';
-        info.innerHTML = `
-          <div class="card-label">${item.label}</div>
-          <div class="card-id">ID #${item.id}</div>
-          <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">
-            Replace Photo
-          </button>
-        `;
-
-        card.appendChild(imgWrap);
-        card.appendChild(info);
-        grid.appendChild(card);
-      });
-
+      catItems.forEach(item => grid.appendChild(makeCard(item)));
       section.appendChild(grid);
       galleryContainer.appendChild(section);
     });
 
     galleryContainer.querySelectorAll('.replace-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
         pendingItemId = btn.dataset.id;
         pendingCard = btn.closest('.gallery-card');
         pendingBtn = btn;
-        fileInput.click();
+        $('file-input').click();
       });
+    });
+
+    initDragDrop();
+  }
+
+  function makeCard(item) {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+    card.dataset.id = item.id;
+    card.draggable = true;
+    card.innerHTML = `
+      <div class="drag-handle">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="#ccc"><circle cx="4" cy="3" r="1"/><circle cx="8" cy="3" r="1"/><circle cx="4" cy="6" r="1"/><circle cx="8" cy="6" r="1"/><circle cx="4" cy="9" r="1"/><circle cx="8" cy="9" r="1"/></svg>
+        drag to reorder
+      </div>
+      <div class="card-img-wrap">
+        <img src="${item.thumb || item.src}" alt="${item.label}" onerror="this.src='${item.src}'" />
+      </div>
+      <div class="card-info">
+        <div class="card-label">${item.label}</div>
+        <div class="card-id">ID #${item.id}</div>
+        <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">Replace Photo</button>
+      </div>`;
+    return card;
+  }
+
+  // ── DRAG & DROP ─────────────────────────────────────────
+  function initDragDrop() {
+    const cards = document.querySelectorAll('.gallery-card');
+    cards.forEach(card => {
+      card.addEventListener('dragstart', onDragStart);
+      card.addEventListener('dragend', onDragEnd);
+      card.addEventListener('dragover', onDragOver);
+      card.addEventListener('dragenter', onDragEnter);
+      card.addEventListener('dragleave', onDragLeave);
+      card.addEventListener('drop', onDrop);
     });
   }
 
-  fileInput.addEventListener('change', async () => {
-    const file = fileInput.files[0];
+  function onDragStart(e) {
+    dragSrcCard = this;
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', this.dataset.id);
+  }
+
+  function onDragEnd() {
+    this.classList.remove('dragging');
+    document.querySelectorAll('.gallery-card').forEach(c => c.classList.remove('drag-over'));
+    dragSrcCard = null;
+  }
+
+  function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    return false;
+  }
+
+  function onDragEnter() {
+    if (this !== dragSrcCard) this.classList.add('drag-over');
+  }
+
+  function onDragLeave() {
+    this.classList.remove('drag-over');
+  }
+
+  function onDrop(e) {
+    e.stopPropagation();
+    this.classList.remove('drag-over');
+    if (!dragSrcCard || dragSrcCard === this) return;
+
+    const grid = this.parentNode;
+    const srcGrid = dragSrcCard.parentNode;
+    const allCards = [...grid.children];
+    const targetIndex = allCards.indexOf(this);
+
+    if (grid === srcGrid) {
+      const srcIndex = allCards.indexOf(dragSrcCard);
+      if (srcIndex < targetIndex) grid.insertBefore(dragSrcCard, this.nextSibling);
+      else grid.insertBefore(dragSrcCard, this);
+    } else {
+      grid.insertBefore(dragSrcCard, this);
+    }
+
+    markUnsaved();
+    return false;
+  }
+
+  function markUnsaved() {
+    hasUnsavedOrder = true;
+    unsavedBanner.classList.add('visible');
+    saveOrderBtn.classList.add('visible');
+    saveOrderBtn.textContent = '';
+    saveOrderBtn.innerHTML = `
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Save Order`;
+    saveOrderBtn.className = 'save-btn visible';
+  }
+
+  // ── SAVE ORDER ──────────────────────────────────────────
+  saveOrderBtn.addEventListener('click', async () => {
+    const allCards = [...document.querySelectorAll('.gallery-card')];
+    const order = allCards.map(c => parseInt(c.dataset.id));
+
+    saveOrderBtn.className = 'save-btn visible saving';
+    saveOrderBtn.innerHTML = `<div class="spinner" style="width:14px;height:14px;border-width:2px;margin:0"></div> Saving...`;
+
+    try {
+      const res = await fetch('/admin/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        hasUnsavedOrder = false;
+        unsavedBanner.classList.remove('visible');
+        saveOrderBtn.className = 'save-btn visible saved';
+        saveOrderBtn.innerHTML = `
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Saved!`;
+        setTimeout(() => { saveOrderBtn.className = 'save-btn'; }, 2500);
+      } else {
+        alert('Save failed. Please try again.');
+        saveOrderBtn.className = 'save-btn visible';
+      }
+    } catch {
+      alert('Save failed. Please try again.');
+      saveOrderBtn.className = 'save-btn visible';
+    }
+  });
+
+  // ── IMAGE REPLACE ────────────────────────────────────────
+  $('file-input').addEventListener('change', () => {
+    const file = $('file-input').files[0];
     if (!file) return;
-    fileInput.value = '';
-
+    $('file-input').value = '';
     const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target.result;
-      const base64 = dataUrl.split(',')[1];
-      pendingFileData = base64;
+    reader.onload = e => {
+      pendingFileData = e.target.result.split(',')[1];
       pendingFileName = file.name;
-
-      const currentSrc = pendingCard.querySelector('img').src;
-      modalLabel.textContent = pendingBtn.dataset.label;
-      modalCategory.textContent = pendingBtn.dataset.cat;
-      modalCurrent.src = currentSrc;
-      modalNew.src = dataUrl;
-      previewOverlay.classList.add('active');
+      $('modal-label').textContent = pendingBtn.dataset.label;
+      $('modal-category').textContent = pendingBtn.dataset.cat;
+      $('modal-current').src = pendingCard.querySelector('img').src;
+      $('modal-new').src = e.target.result;
+      $('preview-overlay').classList.add('active');
     };
     reader.readAsDataURL(file);
   });
 
-  modalCancel.addEventListener('click', () => {
-    previewOverlay.classList.remove('active');
-    pendingItemId = null;
-    pendingFileData = null;
-    pendingFileName = null;
-    pendingCard = null;
-    pendingBtn = null;
+  $('modal-cancel').addEventListener('click', () => {
+    $('preview-overlay').classList.remove('active');
+    pendingItemId = pendingFileData = pendingFileName = pendingCard = pendingBtn = null;
   });
 
-  modalConfirm.addEventListener('click', async () => {
+  $('modal-confirm').addEventListener('click', async () => {
     if (!pendingItemId || !pendingFileData) return;
-    previewOverlay.classList.remove('active');
-
+    $('preview-overlay').classList.remove('active');
     pendingBtn.textContent = 'Uploading...';
     pendingBtn.className = 'replace-btn uploading';
 
@@ -341,80 +436,33 @@
       const res = await fetch('/admin/update-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          itemId: pendingItemId,
-          fileData: pendingFileData,
-          fileName: pendingFileName,
-        })
+        body: JSON.stringify({ itemId: pendingItemId, fileData: pendingFileData, fileName: pendingFileName })
       });
       const data = await res.json();
       if (data.ok) {
-        const img = pendingCard.querySelector('img');
-        img.src = data.src + '?t=' + Date.now();
-        pendingBtn.textContent = 'Updated!';
+        pendingCard.querySelector('img').src = data.src + '?t=' + Date.now();
         pendingBtn.className = 'replace-btn success';
+        pendingBtn.textContent = 'Updated!';
         setTimeout(() => {
-          pendingBtn.textContent = 'Replace Photo';
           pendingBtn.className = 'replace-btn';
+          pendingBtn.textContent = 'Replace Photo';
           pendingBtn.dataset.src = data.src;
         }, 2500);
       } else {
-        pendingBtn.textContent = 'Replace Photo';
-        pendingBtn.className = 'replace-btn';
         alert('Upload failed: ' + (data.error || 'Unknown error'));
+        pendingBtn.className = 'replace-btn';
+        pendingBtn.textContent = 'Replace Photo';
       }
     } catch {
-      pendingBtn.textContent = 'Replace Photo';
-      pendingBtn.className = 'replace-btn';
       alert('Upload failed. Please try again.');
+      pendingBtn.className = 'replace-btn';
+      pendingBtn.textContent = 'Replace Photo';
     }
-
-    pendingItemId = null;
-    pendingFileData = null;
-    pendingFileName = null;
-    pendingCard = null;
-    pendingBtn = null;
+    pendingItemId = pendingFileData = pendingFileName = pendingCard = pendingBtn = null;
   });
 
-  loginBtn.addEventListener('click', async () => {
-    const password = passwordInput.value;
-    if (!password) return;
-    loginBtn.textContent = 'Logging in...';
-    loginBtn.disabled = true;
-    loginError.style.display = 'none';
-
-    try {
-      const res = await fetch('/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      const data = await res.json();
-      if (data.ok) {
-        const galleryRes = await fetch('/admin/gallery-data');
-        const items = await galleryRes.json();
-        showAdmin(items);
-      } else {
-        loginError.style.display = 'block';
-        loginBtn.textContent = 'Log In';
-        loginBtn.disabled = false;
-        passwordInput.value = '';
-      }
-    } catch {
-      loginError.style.display = 'block';
-      loginBtn.textContent = 'Log In';
-      loginBtn.disabled = false;
-    }
-  });
-
-  passwordInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter') loginBtn.click();
-  });
-
-  logoutBtn.addEventListener('click', async () => {
-    await fetch('/admin/logout', { method: 'POST' });
-    showLogin();
-    passwordInput.value = '';
+  window.addEventListener('beforeunload', e => {
+    if (hasUnsavedOrder) { e.preventDefault(); e.returnValue = ''; }
   });
 
   checkAuth();
