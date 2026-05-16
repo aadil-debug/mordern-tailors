@@ -13,7 +13,7 @@
     .login-card { background: #fff; border-radius: 14px; padding: 48px 40px; width: 100%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); text-align: center; }
     .login-logo { width: 58px; height: 58px; background: #b8962e; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 22px; color: #fff; font-weight: 700; }
     .login-card h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-    .login-card p { color: #777; font-size: 14px; margin-bottom: 32px; }
+    .login-card > p { color: #777; font-size: 14px; margin-bottom: 32px; }
     .login-card input { width: 100%; padding: 12px 16px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s; margin-bottom: 12px; }
     .login-card input:focus { border-color: #b8962e; }
     .login-card button { width: 100%; padding: 13px; background: #b8962e; color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
@@ -28,10 +28,13 @@
     .header-logo { width: 36px; height: 36px; background: #b8962e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
     .header-title { font-size: 16px; font-weight: 600; }
     .header-sub { font-size: 11px; color: #888; }
-    .header-right { display: flex; align-items: center; gap: 10px; }
+    .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 
-    .save-btn { background: #b8962e; color: #fff; border: none; border-radius: 8px; padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer; display: none; align-items: center; gap: 7px; transition: background 0.2s; }
-    .save-btn:hover { background: #9a7d26; }
+    .add-btn { background: #b8962e; color: #fff; border: none; border-radius: 8px; padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: background 0.2s; }
+    .add-btn:hover { background: #9a7d26; }
+
+    .save-btn { background: #2d6a4f; color: #fff; border: none; border-radius: 8px; padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer; display: none; align-items: center; gap: 7px; transition: background 0.2s; }
+    .save-btn:hover { background: #1b4332; }
     .save-btn.visible { display: flex; }
     .save-btn.saving { background: #888; cursor: wait; pointer-events: none; }
     .save-btn.saved { background: #22c55e; pointer-events: none; }
@@ -42,11 +45,9 @@
     /* UNSAVED BANNER */
     .unsaved-banner { background: #fffbeb; border-bottom: 2px solid #f59e0b; padding: 10px 28px; display: none; align-items: center; justify-content: space-between; font-size: 13px; color: #92400e; }
     .unsaved-banner.visible { display: flex; }
-    .unsaved-banner strong { font-weight: 600; }
 
     /* BODY */
-    .admin-body { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
-
+    .admin-body { max-width: 1200px; margin: 0 auto; padding: 28px 24px 80px; }
     .hint-box { background: #fff; border: 1.5px solid #e8e8e8; border-radius: 10px; padding: 14px 18px; margin-bottom: 28px; font-size: 13px; color: #555; display: flex; align-items: center; gap: 10px; }
     .hint-box .dot { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
 
@@ -61,41 +62,62 @@
     .gallery-card.dragging { opacity: 0.4; cursor: grabbing; transform: scale(0.97); }
     .gallery-card.drag-over { border-color: #b8962e; box-shadow: 0 0 0 3px rgba(184,150,46,0.25); }
 
-    .drag-handle { padding: 8px 12px 0; display: flex; align-items: center; gap: 5px; color: #ccc; font-size: 11px; cursor: grab; }
-    .drag-handle svg { flex-shrink: 0; }
-
+    .drag-handle { padding: 8px 12px 0; display: flex; align-items: center; gap: 5px; color: #ccc; font-size: 11px; }
     .card-img-wrap { aspect-ratio: 3/4; overflow: hidden; background: #f0f0f0; margin: 6px 10px 0; border-radius: 6px; }
     .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-
     .card-info { padding: 10px 12px 12px; }
     .card-label { font-size: 13px; font-weight: 600; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-id { font-size: 11px; color: #aaa; margin-bottom: 9px; }
-
     .replace-btn { width: 100%; padding: 8px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: #444; }
     .replace-btn:hover { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
     .replace-btn.uploading { background: #eee; color: #999; cursor: wait; pointer-events: none; }
     .replace-btn.success { background: #22c55e; border-color: #22c55e; color: #fff; pointer-events: none; }
 
-    /* PREVIEW MODAL */
+    /* MODALS shared */
     .overlay-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
     .overlay-dim.active { display: flex; }
-    .preview-modal { background: #fff; border-radius: 14px; padding: 32px; max-width: 440px; width: 100%; text-align: center; }
-    .preview-modal h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-    .preview-modal .modal-cat { font-size: 12px; color: #888; margin-bottom: 22px; }
-    .preview-imgs { display: flex; gap: 14px; margin-bottom: 22px; }
-    .preview-imgs .pane { flex: 1; }
-    .preview-imgs .pane span { font-size: 11px; color: #888; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
-    .preview-imgs img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; border: 1.5px solid #eee; }
-    .modal-actions { display: flex; gap: 10px; }
+    .modal-box { background: #fff; border-radius: 14px; padding: 32px; width: 100%; text-align: center; max-height: 90vh; overflow-y: auto; }
+    .modal-box h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .modal-box .modal-sub { font-size: 13px; color: #888; margin-bottom: 22px; }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
     .modal-actions button { flex: 1; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: background 0.2s; }
     .btn-cancel { background: #f0f0f0; color: #444; }
     .btn-cancel:hover { background: #e0e0e0; }
     .btn-confirm { background: #b8962e; color: #fff; }
     .btn-confirm:hover { background: #9a7d26; }
+    .btn-confirm:disabled { background: #ccc; cursor: not-allowed; }
+
+    /* REPLACE MODAL */
+    #replace-modal { max-width: 440px; }
+    .preview-imgs { display: flex; gap: 14px; margin-bottom: 4px; }
+    .preview-imgs .pane { flex: 1; }
+    .preview-imgs .pane span { font-size: 11px; color: #888; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em; }
+    .preview-imgs img { width: 100%; aspect-ratio: 3/4; object-fit: cover; border-radius: 8px; border: 1.5px solid #eee; }
+
+    /* ADD MODAL */
+    #add-modal { max-width: 500px; }
+    .upload-zone { border: 2px dashed #ddd; border-radius: 10px; padding: 32px 20px; cursor: pointer; transition: border-color 0.2s, background 0.2s; margin-bottom: 20px; position: relative; }
+    .upload-zone:hover, .upload-zone.dragover { border-color: #b8962e; background: #fffbeb; }
+    .upload-zone .upload-icon { font-size: 36px; margin-bottom: 10px; }
+    .upload-zone p { font-size: 14px; color: #666; }
+    .upload-zone p strong { color: #b8962e; }
+    .upload-zone .preview-thumb { width: 100%; max-height: 260px; object-fit: contain; border-radius: 8px; display: none; }
+    .upload-zone .upload-placeholder { transition: opacity 0.2s; }
+    .upload-zone.has-image .upload-placeholder { display: none; }
+    .upload-zone.has-image .preview-thumb { display: block; }
+
+    .form-row { text-align: left; margin-bottom: 14px; }
+    .form-row label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: #333; }
+    .form-row select, .form-row input[type="text"] { width: 100%; padding: 10px 14px; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; background: #fff; }
+    .form-row select:focus, .form-row input[type="text"]:focus { border-color: #b8962e; }
+
+    .add-success { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 16px; margin-top: 16px; display: none; }
+    .add-success p { font-size: 14px; color: #166534; font-weight: 500; }
 
     /* LOADING */
     #loading-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f4f4f4; flex-direction: column; gap: 14px; }
     .spinner { width: 36px; height: 36px; border: 3px solid #e0e0e0; border-top-color: #b8962e; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    .spinner.sm { width: 14px; height: 14px; border-width: 2px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     input[type="file"] { display: none; }
@@ -130,8 +152,12 @@
     </div>
     <div class="header-right">
       <button class="save-btn" id="save-order-btn">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
         Save Order
+      </button>
+      <button class="add-btn" id="open-add-btn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add New Photo
       </button>
       <button class="logout-btn" id="logout-btn">Log Out</button>
     </div>
@@ -144,7 +170,7 @@
   <div class="admin-body">
     <div class="hint-box">
       <div class="dot"></div>
-      <span><strong>Changes here save directly to the project.</strong> Replace a photo by clicking "Replace Photo" on any card. Drag cards to reorder within or across sections, then hit Save Order.</span>
+      <span><strong>All changes save permanently.</strong> Replace a photo with "Replace Photo", drag cards to reorder then hit Save Order, or click "Add New Photo" to add a brand new gallery entry.</span>
     </div>
     <div id="gallery-container">
       <div style="text-align:center;padding:60px;color:#aaa">Loading gallery...</div>
@@ -152,22 +178,65 @@
   </div>
 </div>
 
-<div class="overlay-dim" id="preview-overlay">
-  <div class="preview-modal">
-    <h2 id="modal-label"></h2>
-    <p class="modal-cat" id="modal-category"></p>
+<!-- Replace photo modal -->
+<div class="overlay-dim" id="replace-overlay">
+  <div class="modal-box" id="replace-modal">
+    <h2 id="replace-modal-label"></h2>
+    <p class="modal-sub" id="replace-modal-category"></p>
     <div class="preview-imgs">
       <div class="pane"><span>Current</span><img id="modal-current" src="" alt="current" /></div>
       <div class="pane"><span>New</span><img id="modal-new" src="" alt="new" /></div>
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" id="modal-cancel">Cancel</button>
-      <button class="btn-confirm" id="modal-confirm">Replace</button>
+      <button class="btn-cancel" id="replace-cancel">Cancel</button>
+      <button class="btn-confirm" id="replace-confirm">Replace</button>
     </div>
   </div>
 </div>
 
-<input type="file" id="file-input" accept="image/*" />
+<!-- Add new photo modal -->
+<div class="overlay-dim" id="add-overlay">
+  <div class="modal-box" id="add-modal">
+    <h2>Add New Photo</h2>
+    <p class="modal-sub">Upload a photo and choose where it appears in the gallery</p>
+
+    <div class="upload-zone" id="add-upload-zone">
+      <div class="upload-placeholder">
+        <div class="upload-icon">📷</div>
+        <p><strong>Click to choose a photo</strong><br>or drag and drop it here</p>
+      </div>
+      <img class="preview-thumb" id="add-preview-thumb" src="" alt="preview" />
+    </div>
+
+    <div class="form-row">
+      <label for="add-category">Category</label>
+      <select id="add-category">
+        <option value="">— Select a category —</option>
+        <option value="Women's Apparel">Women's Apparel</option>
+        <option value="Men's Apparel">Men's Apparel</option>
+        <option value="Kids Wear">Kids Wear</option>
+        <option value="Wedding Wear">Wedding Wear</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="add-label">Label <span style="font-weight:400;color:#999">(e.g. Silk Saree, Men's Kurta)</span></label>
+      <input type="text" id="add-label" placeholder="Enter a label for this photo" />
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" id="add-cancel">Cancel</button>
+      <button class="btn-confirm" id="add-confirm" disabled>Add to Gallery</button>
+    </div>
+
+    <div class="add-success" id="add-success">
+      <p>✓ Photo added to the gallery successfully!</p>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="replace-file-input" accept="image/*" />
+<input type="file" id="add-file-input" accept="image/*" />
 
 <script>
   const $ = id => document.getElementById(id);
@@ -178,12 +247,17 @@
   const unsavedBanner = $('unsaved-banner');
   const saveOrderBtn = $('save-order-btn');
 
+  // Replace state
   let pendingItemId = null, pendingFileData = null, pendingFileName = null;
   let pendingCard = null, pendingBtn = null;
+
+  // Add state
+  let addFileData = null, addFileName = null;
+
   let hasUnsavedOrder = false;
   let dragSrcCard = null;
 
-  // ── AUTH ────────────────────────────────────────────────
+  // ── AUTH ─────────────────────────────────────────────────
   async function checkAuth() {
     try {
       const res = await fetch('/admin/gallery-data');
@@ -212,9 +286,8 @@
     btn.textContent = 'Logging in...'; btn.disabled = true;
     $('login-error').style.display = 'none';
     try {
-      const res = await fetch('/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password: pw}) });
-      const data = await res.json();
-      if (data.ok) {
+      const res = await fetch('/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) });
+      if ((await res.json()).ok) {
         const gr = await fetch('/admin/gallery-data');
         showAdmin(await gr.json());
       } else {
@@ -227,52 +300,44 @@
       btn.textContent = 'Log In'; btn.disabled = false;
     }
   });
-
   $('password-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('login-btn').click(); });
 
   $('logout-btn').addEventListener('click', async () => {
-    await fetch('/admin/logout', { method:'POST' });
+    await fetch('/admin/logout', { method: 'POST' });
     showLogin();
     $('password-input').value = '';
   });
 
-  // ── GALLERY RENDER ──────────────────────────────────────
+  // ── GALLERY RENDER ────────────────────────────────────────
   function renderGallery(items) {
     const categories = {};
     items.forEach(item => {
       if (!categories[item.category]) categories[item.category] = [];
       categories[item.category].push(item);
     });
-
     galleryContainer.innerHTML = '';
-
     Object.entries(categories).forEach(([cat, catItems]) => {
       const section = document.createElement('div');
-
       const heading = document.createElement('div');
       heading.className = 'section-heading';
       heading.innerHTML = `${cat} <span class="count">${catItems.length}</span>`;
       section.appendChild(heading);
-
       const grid = document.createElement('div');
       grid.className = 'gallery-grid';
       grid.dataset.category = cat;
-
       catItems.forEach(item => grid.appendChild(makeCard(item)));
       section.appendChild(grid);
       galleryContainer.appendChild(section);
     });
-
     galleryContainer.querySelectorAll('.replace-btn').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
         pendingItemId = btn.dataset.id;
         pendingCard = btn.closest('.gallery-card');
         pendingBtn = btn;
-        $('file-input').click();
+        $('replace-file-input').click();
       });
     });
-
     initDragDrop();
   }
 
@@ -291,16 +356,15 @@
       </div>
       <div class="card-info">
         <div class="card-label">${item.label}</div>
-        <div class="card-id">ID #${item.id}</div>
+        <div class="card-id">ID #${item.id} · ${item.category}</div>
         <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">Replace Photo</button>
       </div>`;
     return card;
   }
 
-  // ── DRAG & DROP ─────────────────────────────────────────
+  // ── DRAG & DROP ───────────────────────────────────────────
   function initDragDrop() {
-    const cards = document.querySelectorAll('.gallery-card');
-    cards.forEach(card => {
+    document.querySelectorAll('.gallery-card').forEach(card => {
       card.addEventListener('dragstart', onDragStart);
       card.addEventListener('dragend', onDragEnd);
       card.addEventListener('dragover', onDragOver);
@@ -310,160 +374,227 @@
     });
   }
 
-  function onDragStart(e) {
-    dragSrcCard = this;
-    this.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', this.dataset.id);
-  }
-
-  function onDragEnd() {
-    this.classList.remove('dragging');
-    document.querySelectorAll('.gallery-card').forEach(c => c.classList.remove('drag-over'));
-    dragSrcCard = null;
-  }
-
-  function onDragOver(e) {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    return false;
-  }
-
-  function onDragEnter() {
-    if (this !== dragSrcCard) this.classList.add('drag-over');
-  }
-
-  function onDragLeave() {
-    this.classList.remove('drag-over');
-  }
-
+  function onDragStart(e) { dragSrcCard = this; this.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; }
+  function onDragEnd() { this.classList.remove('dragging'); document.querySelectorAll('.gallery-card').forEach(c => c.classList.remove('drag-over')); dragSrcCard = null; }
+  function onDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; }
+  function onDragEnter() { if (this !== dragSrcCard) this.classList.add('drag-over'); }
+  function onDragLeave() { this.classList.remove('drag-over'); }
   function onDrop(e) {
     e.stopPropagation();
     this.classList.remove('drag-over');
     if (!dragSrcCard || dragSrcCard === this) return;
-
     const grid = this.parentNode;
-    const srcGrid = dragSrcCard.parentNode;
     const allCards = [...grid.children];
+    const srcIndex = [...dragSrcCard.parentNode.children].indexOf(dragSrcCard);
     const targetIndex = allCards.indexOf(this);
-
-    if (grid === srcGrid) {
-      const srcIndex = allCards.indexOf(dragSrcCard);
+    if (grid === dragSrcCard.parentNode) {
       if (srcIndex < targetIndex) grid.insertBefore(dragSrcCard, this.nextSibling);
       else grid.insertBefore(dragSrcCard, this);
     } else {
       grid.insertBefore(dragSrcCard, this);
     }
-
     markUnsaved();
-    return false;
   }
 
   function markUnsaved() {
     hasUnsavedOrder = true;
     unsavedBanner.classList.add('visible');
-    saveOrderBtn.classList.add('visible');
-    saveOrderBtn.textContent = '';
-    saveOrderBtn.innerHTML = `
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-      Save Order`;
+    saveOrderBtn.innerHTML = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save Order`;
     saveOrderBtn.className = 'save-btn visible';
   }
 
-  // ── SAVE ORDER ──────────────────────────────────────────
   saveOrderBtn.addEventListener('click', async () => {
-    const allCards = [...document.querySelectorAll('.gallery-card')];
-    const order = allCards.map(c => parseInt(c.dataset.id));
-
+    const order = [...document.querySelectorAll('.gallery-card')].map(c => parseInt(c.dataset.id));
     saveOrderBtn.className = 'save-btn visible saving';
-    saveOrderBtn.innerHTML = `<div class="spinner" style="width:14px;height:14px;border-width:2px;margin:0"></div> Saving...`;
-
+    saveOrderBtn.innerHTML = `<div class="spinner sm"></div> Saving...`;
     try {
-      const res = await fetch('/admin/reorder', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order })
-      });
-      const data = await res.json();
-      if (data.ok) {
+      const res = await fetch('/admin/reorder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ order }) });
+      if ((await res.json()).ok) {
         hasUnsavedOrder = false;
         unsavedBanner.classList.remove('visible');
         saveOrderBtn.className = 'save-btn visible saved';
-        saveOrderBtn.innerHTML = `
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-          Saved!`;
+        saveOrderBtn.innerHTML = `<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Saved!`;
         setTimeout(() => { saveOrderBtn.className = 'save-btn'; }, 2500);
-      } else {
-        alert('Save failed. Please try again.');
-        saveOrderBtn.className = 'save-btn visible';
-      }
-    } catch {
-      alert('Save failed. Please try again.');
-      saveOrderBtn.className = 'save-btn visible';
-    }
+      } else { alert('Save failed.'); saveOrderBtn.className = 'save-btn visible'; }
+    } catch { alert('Save failed.'); saveOrderBtn.className = 'save-btn visible'; }
   });
 
-  // ── IMAGE REPLACE ────────────────────────────────────────
-  $('file-input').addEventListener('change', () => {
-    const file = $('file-input').files[0];
+  // ── REPLACE PHOTO ─────────────────────────────────────────
+  $('replace-file-input').addEventListener('change', () => {
+    const file = $('replace-file-input').files[0];
     if (!file) return;
-    $('file-input').value = '';
+    $('replace-file-input').value = '';
     const reader = new FileReader();
     reader.onload = e => {
       pendingFileData = e.target.result.split(',')[1];
       pendingFileName = file.name;
-      $('modal-label').textContent = pendingBtn.dataset.label;
-      $('modal-category').textContent = pendingBtn.dataset.cat;
+      $('replace-modal-label').textContent = pendingBtn.dataset.label;
+      $('replace-modal-category').textContent = pendingBtn.dataset.cat;
       $('modal-current').src = pendingCard.querySelector('img').src;
       $('modal-new').src = e.target.result;
-      $('preview-overlay').classList.add('active');
+      $('replace-overlay').classList.add('active');
     };
     reader.readAsDataURL(file);
   });
 
-  $('modal-cancel').addEventListener('click', () => {
-    $('preview-overlay').classList.remove('active');
+  $('replace-cancel').addEventListener('click', () => {
+    $('replace-overlay').classList.remove('active');
     pendingItemId = pendingFileData = pendingFileName = pendingCard = pendingBtn = null;
   });
 
-  $('modal-confirm').addEventListener('click', async () => {
+  $('replace-confirm').addEventListener('click', async () => {
     if (!pendingItemId || !pendingFileData) return;
-    $('preview-overlay').classList.remove('active');
+    $('replace-overlay').classList.remove('active');
     pendingBtn.textContent = 'Uploading...';
     pendingBtn.className = 'replace-btn uploading';
-
     try {
-      const res = await fetch('/admin/update-image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: pendingItemId, fileData: pendingFileData, fileName: pendingFileName })
-      });
+      const res = await fetch('/admin/update-image', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ itemId: pendingItemId, fileData: pendingFileData, fileName: pendingFileName }) });
       const data = await res.json();
       if (data.ok) {
         pendingCard.querySelector('img').src = data.src + '?t=' + Date.now();
         pendingBtn.className = 'replace-btn success';
         pendingBtn.textContent = 'Updated!';
-        setTimeout(() => {
-          pendingBtn.className = 'replace-btn';
-          pendingBtn.textContent = 'Replace Photo';
-          pendingBtn.dataset.src = data.src;
-        }, 2500);
-      } else {
-        alert('Upload failed: ' + (data.error || 'Unknown error'));
-        pendingBtn.className = 'replace-btn';
-        pendingBtn.textContent = 'Replace Photo';
-      }
-    } catch {
-      alert('Upload failed. Please try again.');
-      pendingBtn.className = 'replace-btn';
-      pendingBtn.textContent = 'Replace Photo';
-    }
+        setTimeout(() => { pendingBtn.className = 'replace-btn'; pendingBtn.textContent = 'Replace Photo'; pendingBtn.dataset.src = data.src; }, 2500);
+      } else { alert('Upload failed: ' + (data.error || 'Unknown')); pendingBtn.className = 'replace-btn'; pendingBtn.textContent = 'Replace Photo'; }
+    } catch { alert('Upload failed.'); pendingBtn.className = 'replace-btn'; pendingBtn.textContent = 'Replace Photo'; }
     pendingItemId = pendingFileData = pendingFileName = pendingCard = pendingBtn = null;
   });
 
-  window.addEventListener('beforeunload', e => {
-    if (hasUnsavedOrder) { e.preventDefault(); e.returnValue = ''; }
+  // ── ADD NEW PHOTO ─────────────────────────────────────────
+  function checkAddReady() {
+    const ready = addFileData && $('add-category').value && $('add-label').value.trim();
+    $('add-confirm').disabled = !ready;
+  }
+
+  $('open-add-btn').addEventListener('click', () => {
+    // Reset form
+    addFileData = null; addFileName = null;
+    $('add-upload-zone').classList.remove('has-image');
+    $('add-preview-thumb').src = '';
+    $('add-category').value = '';
+    $('add-label').value = '';
+    $('add-confirm').disabled = true;
+    $('add-success').style.display = 'none';
+    $('add-overlay').classList.add('active');
   });
+
+  // Click to pick file
+  $('add-upload-zone').addEventListener('click', () => $('add-file-input').click());
+
+  // Drag over zone
+  $('add-upload-zone').addEventListener('dragover', e => { e.preventDefault(); $('add-upload-zone').classList.add('dragover'); });
+  $('add-upload-zone').addEventListener('dragleave', () => $('add-upload-zone').classList.remove('dragover'));
+  $('add-upload-zone').addEventListener('drop', e => {
+    e.preventDefault();
+    $('add-upload-zone').classList.remove('dragover');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) loadAddFile(file);
+  });
+
+  $('add-file-input').addEventListener('change', () => {
+    const file = $('add-file-input').files[0];
+    if (file) loadAddFile(file);
+    $('add-file-input').value = '';
+  });
+
+  function loadAddFile(file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      addFileData = e.target.result.split(',')[1];
+      addFileName = file.name;
+      $('add-preview-thumb').src = e.target.result;
+      $('add-upload-zone').classList.add('has-image');
+      checkAddReady();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  $('add-category').addEventListener('change', checkAddReady);
+  $('add-label').addEventListener('input', checkAddReady);
+
+  $('add-cancel').addEventListener('click', () => $('add-overlay').classList.remove('active'));
+
+  $('add-confirm').addEventListener('click', async () => {
+    if (!addFileData) return;
+    const category = $('add-category').value;
+    const label = $('add-label').value.trim();
+    if (!category || !label) return;
+
+    $('add-confirm').disabled = true;
+    $('add-confirm').textContent = 'Adding...';
+
+    try {
+      const res = await fetch('/admin/add-item', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileData: addFileData, fileName: addFileName, category, label }) });
+      const data = await res.json();
+      if (data.ok) {
+        $('add-success').style.display = 'block';
+        $('add-confirm').textContent = 'Add to Gallery';
+        // Find or create the category section and add the card
+        addCardToGallery(data.item);
+        setTimeout(() => $('add-overlay').classList.remove('active'), 1800);
+      } else {
+        alert('Failed to add photo: ' + (data.error || 'Unknown error'));
+        $('add-confirm').disabled = false;
+        $('add-confirm').textContent = 'Add to Gallery';
+      }
+    } catch {
+      alert('Failed to add photo. Please try again.');
+      $('add-confirm').disabled = false;
+      $('add-confirm').textContent = 'Add to Gallery';
+    }
+  });
+
+  function addCardToGallery(item) {
+    // Find existing category grid or create new section
+    let grid = null;
+    document.querySelectorAll('.gallery-grid').forEach(g => {
+      if (g.dataset.category === item.category) grid = g;
+    });
+
+    if (!grid) {
+      // Create new category section
+      const section = document.createElement('div');
+      const heading = document.createElement('div');
+      heading.className = 'section-heading';
+      heading.innerHTML = `${item.category} <span class="count">1</span>`;
+      section.appendChild(heading);
+      grid = document.createElement('div');
+      grid.className = 'gallery-grid';
+      grid.dataset.category = item.category;
+      section.appendChild(grid);
+      galleryContainer.appendChild(section);
+    } else {
+      // Update count
+      const heading = grid.closest('div').querySelector('.section-heading .count');
+      if (heading) heading.textContent = parseInt(heading.textContent) + 1;
+    }
+
+    const card = makeCard(item);
+    grid.appendChild(card);
+
+    // Wire up replace button
+    card.querySelector('.replace-btn').addEventListener('click', e => {
+      e.stopPropagation();
+      const btn = e.currentTarget;
+      pendingItemId = btn.dataset.id;
+      pendingCard = btn.closest('.gallery-card');
+      pendingBtn = btn;
+      $('replace-file-input').click();
+    });
+
+    // Wire up drag events
+    card.addEventListener('dragstart', onDragStart);
+    card.addEventListener('dragend', onDragEnd);
+    card.addEventListener('dragover', onDragOver);
+    card.addEventListener('dragenter', onDragEnter);
+    card.addEventListener('dragleave', onDragLeave);
+    card.addEventListener('drop', onDrop);
+
+    // Scroll to new card
+    setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'center' }), 200);
+  }
+
+  window.addEventListener('beforeunload', e => { if (hasUnsavedOrder) { e.preventDefault(); e.returnValue = ''; } });
 
   checkAuth();
 </script>

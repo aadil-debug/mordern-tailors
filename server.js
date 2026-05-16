@@ -221,6 +221,42 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Add new gallery item
+  if (urlPath === '/admin/add-item' && method === 'POST') {
+    if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const body = await parseBody(req);
+    const { fileData, fileName, category, label } = body;
+    if (!fileData || !fileName || !category || !label) {
+      res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'Missing fields' })); return;
+    }
+    const ext = fileName.split('.').pop().toLowerCase() || 'jpg';
+    const items = await loadGalleryItems();
+    const newId = items.reduce((max, it) => Math.max(max, it.id), 0) + 1;
+    const safeFileName = `gallery-${newId}-${Date.now()}.${ext}`;
+    const uploadDir = join(DIST, 'images/uploads');
+    await mkdir(uploadDir, { recursive: true });
+    await writeFile(join(uploadDir, safeFileName), Buffer.from(fileData, 'base64'));
+    const newSrc = `/images/uploads/${safeFileName}`;
+    const altText = `${label} custom tailored ${category} Mumbai`;
+    const newItem = { id: newId, src: newSrc, thumb: newSrc, alt: altText, category, label };
+    items.push(newItem);
+    await dbSet('gallery_items', items);
+    // Also inject into JS bundle for dev sync
+    let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
+    const itemRx2 = /\{id:\d+,src:"[^"]+",thumb:"[^"]+",alt:"[^"]+",category:"[^"]+",label:"[^"]+"\}/g;
+    const ms = [...jsContent.matchAll(itemRx2)];
+    if (ms.length > 0) {
+      const last = ms[ms.length - 1];
+      const insertPos = last.index + last[0].length;
+      const newText = `{id:${newId},src:"${newSrc}",thumb:"${newSrc}",alt:"${altText}",category:"${category}",label:"${label}"}`;
+      jsContent = jsContent.slice(0, insertPos) + ',' + newText + jsContent.slice(insertPos);
+      await writeFile(join(DIST, 'assets/index.js'), jsContent);
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, item: newItem }));
+    return;
+  }
+
   // Admin page
   if (urlPath === '/admin' && method === 'GET') {
     try {
