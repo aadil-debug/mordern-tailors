@@ -68,10 +68,21 @@
     .card-info { padding: 10px 12px 12px; }
     .card-label { font-size: 13px; font-weight: 600; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-id { font-size: 11px; color: #aaa; margin-bottom: 9px; }
-    .replace-btn { width: 100%; padding: 8px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: #444; }
+    .card-btns { display: flex; gap: 6px; }
+    .replace-btn { flex: 1; padding: 8px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: #444; }
     .replace-btn:hover { background: #1a1a1a; border-color: #1a1a1a; color: #fff; }
     .replace-btn.uploading { background: #eee; color: #999; cursor: wait; pointer-events: none; }
     .replace-btn.success { background: #22c55e; border-color: #22c55e; color: #fff; pointer-events: none; }
+    .delete-btn { padding: 8px 10px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 6px; cursor: pointer; transition: all 0.2s; color: #aaa; font-size: 12px; display: flex; align-items: center; }
+    .delete-btn:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+    .delete-confirm { display: none; background: #fff1f2; border: 1.5px solid #fca5a5; border-radius: 6px; padding: 8px 10px; margin-top: 6px; font-size: 12px; color: #dc2626; }
+    .delete-confirm.visible { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+    .delete-confirm span { font-weight: 500; }
+    .delete-confirm-btns { display: flex; gap: 5px; }
+    .delete-confirm-btns button { padding: 4px 10px; border-radius: 5px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .dcb-cancel { background: #e5e5e5; color: #444; }
+    .dcb-yes { background: #dc2626; color: #fff; }
+    .gallery-card.deleting { opacity: 0.4; pointer-events: none; transition: opacity 0.3s; }
 
     /* MODALS shared */
     .overlay-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -338,6 +349,7 @@
         $('replace-file-input').click();
       });
     });
+    galleryContainer.querySelectorAll('.delete-btn').forEach(btn => wireDeleteBtn(btn));
     initDragDrop();
   }
 
@@ -357,9 +369,80 @@
       <div class="card-info">
         <div class="card-label">${item.label}</div>
         <div class="card-id">ID #${item.id} · ${item.category}</div>
-        <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">Replace Photo</button>
+        <div class="card-btns">
+          <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">Replace Photo</button>
+          <button class="delete-btn" data-id="${item.id}" title="Delete">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+        <div class="delete-confirm" id="dc-${item.id}">
+          <span>Remove this photo?</span>
+          <div class="delete-confirm-btns">
+            <button class="dcb-cancel" data-id="${item.id}">Cancel</button>
+            <button class="dcb-yes" data-id="${item.id}">Delete</button>
+          </div>
+        </div>
       </div>`;
     return card;
+  }
+
+  // ── DELETE ───────────────────────────────────────────────
+  function wireDeleteBtn(btn) {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      const confirm = $('dc-' + id);
+      if (confirm) confirm.classList.add('visible');
+    });
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('dcb-cancel')) {
+      e.stopPropagation();
+      const id = e.target.dataset.id;
+      const confirm = $('dc-' + id);
+      if (confirm) confirm.classList.remove('visible');
+    }
+    if (e.target.classList.contains('dcb-yes')) {
+      e.stopPropagation();
+      const id = e.target.dataset.id;
+      deleteItem(id);
+    }
+  });
+
+  async function deleteItem(itemId) {
+    const card = document.querySelector(`.gallery-card[data-id="${itemId}"]`);
+    if (!card) return;
+    card.classList.add('deleting');
+    try {
+      const res = await fetch('/admin/delete-item', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const grid = card.parentNode;
+        card.style.transition = 'all 0.3s';
+        card.style.transform = 'scale(0.85)';
+        card.style.opacity = '0';
+        setTimeout(() => {
+          card.remove();
+          // Update section count
+          const countEl = grid.closest('div')?.querySelector('.section-heading .count');
+          if (countEl) {
+            const n = parseInt(countEl.textContent) - 1;
+            countEl.textContent = n;
+          }
+        }, 300);
+      } else {
+        card.classList.remove('deleting');
+        alert('Delete failed: ' + (data.error || 'Unknown error'));
+      }
+    } catch {
+      card.classList.remove('deleting');
+      alert('Delete failed. Please try again.');
+    }
   }
 
   // ── DRAG & DROP ───────────────────────────────────────────
@@ -581,6 +664,9 @@
       pendingBtn = btn;
       $('replace-file-input').click();
     });
+
+    // Wire up delete button
+    wireDeleteBtn(card.querySelector('.delete-btn'));
 
     // Wire up drag events
     card.addEventListener('dragstart', onDragStart);

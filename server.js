@@ -221,6 +221,32 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Delete gallery item
+  if (urlPath === '/admin/delete-item' && method === 'POST') {
+    if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const body = await parseBody(req);
+    const { itemId } = body;
+    if (!itemId) { res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'Missing itemId' })); return; }
+    const id = parseInt(itemId);
+    // Remove from DB
+    const items = await loadGalleryItems();
+    const filtered = items.filter(it => it.id !== id);
+    await dbSet('gallery_items', filtered);
+    // Remove from JS bundle
+    let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
+    const withPrev = new RegExp(`,\\{id:${id},src:"[^"]+",thumb:"[^"]+",alt:"[^"]+",category:"[^"]+",label:"[^"]+"\}`);
+    if (withPrev.test(jsContent)) {
+      jsContent = jsContent.replace(withPrev, '');
+    } else {
+      const withNext = new RegExp(`\\{id:${id},src:"[^"]+",thumb:"[^"]+",alt:"[^"]+",category:"[^"]+",label:"[^"]+"\},?`);
+      jsContent = jsContent.replace(withNext, '');
+    }
+    await writeFile(join(DIST, 'assets/index.js'), jsContent);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
   // Add new gallery item
   if (urlPath === '/admin/add-item' && method === 'POST') {
     if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
