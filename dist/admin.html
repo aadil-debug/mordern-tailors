@@ -428,11 +428,16 @@
   let dragSrcCard = null;
 
   // ── AUTH ─────────────────────────────────────────────────
+  function getToken() { return localStorage.getItem('mt_admin_token') || ''; }
+  function authHeaders(extra) { return Object.assign({ 'Authorization': 'Bearer ' + getToken() }, extra || {}); }
+
   async function checkAuth() {
+    const token = getToken();
+    if (!token) { showLogin(); return; }
     try {
-      const res = await fetch('/admin/gallery-data');
+      const res = await fetch('/admin/gallery-data', { headers: authHeaders() });
       if (res.ok) showAdmin(await res.json());
-      else showLogin();
+      else { localStorage.removeItem('mt_admin_token'); showLogin(); }
     } catch { showLogin(); }
   }
 
@@ -457,8 +462,10 @@
     $('login-error').style.display = 'none';
     try {
       const res = await fetch('/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) });
-      if ((await res.json()).ok) {
-        const gr = await fetch('/admin/gallery-data');
+      const data = await res.json();
+      if (data.ok) {
+        localStorage.setItem('mt_admin_token', data.token);
+        const gr = await fetch('/admin/gallery-data', { headers: authHeaders() });
         showAdmin(await gr.json());
       } else {
         $('login-error').style.display = 'block';
@@ -473,6 +480,7 @@
   $('password-input').addEventListener('keydown', e => { if (e.key === 'Enter') $('login-btn').click(); });
 
   $('logout-btn').addEventListener('click', async () => {
+    localStorage.removeItem('mt_admin_token');
     await fetch('/admin/logout', { method: 'POST' });
     showLogin();
     $('password-input').value = '';
@@ -620,7 +628,7 @@
     try {
       const res = await fetch('/admin/ai-reimagine', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ itemId: aiItemId, prompt })
       });
       const data = await res.json();
@@ -654,7 +662,7 @@
     try {
       const res = await fetch('/admin/ai-apply', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ itemId: aiItemId, previewUrl: aiGeneratedUrl })
       });
       const data = await res.json();
@@ -759,7 +767,7 @@
     try {
       const res = await fetch('/admin/update-item', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ itemId, label, category, badge })
       });
       const data = await res.json();
@@ -827,7 +835,7 @@
     try {
       const res = await fetch('/admin/delete-item', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: authHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ itemId })
       });
       const data = await res.json();
@@ -901,7 +909,7 @@
     saveOrderBtn.className = 'save-btn visible saving';
     saveOrderBtn.innerHTML = `<div class="spinner sm"></div> Saving...`;
     try {
-      const res = await fetch('/admin/reorder', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ order }) });
+      const res = await fetch('/admin/reorder', { method: 'POST', headers: authHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify({ order }) });
       if ((await res.json()).ok) {
         hasUnsavedOrder = false;
         unsavedBanner.classList.remove('visible');
@@ -941,7 +949,7 @@
     pendingBtn.textContent = 'Uploading...';
     pendingBtn.className = 'replace-btn uploading';
     try {
-      const res = await fetch('/admin/update-image', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ itemId: pendingItemId, fileData: pendingFileData, fileName: pendingFileName }) });
+      const res = await fetch('/admin/update-image', { method: 'POST', headers: authHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify({ itemId: pendingItemId, fileData: pendingFileData, fileName: pendingFileName }) });
       const data = await res.json();
       if (data.ok) {
         pendingCard.querySelector('img').src = data.src + '?t=' + Date.now();
@@ -1017,7 +1025,7 @@
     $('add-confirm').textContent = 'Adding...';
 
     try {
-      const res = await fetch('/admin/add-item', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileData: addFileData, fileName: addFileName, category, label }) });
+      const res = await fetch('/admin/add-item', { method: 'POST', headers: authHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify({ fileData: addFileData, fileName: addFileName, category, label }) });
       const data = await res.json();
       if (data.ok) {
         $('add-success').style.display = 'block';
@@ -1161,7 +1169,7 @@
     btn.disabled = true;
     btn.textContent = 'Saving...';
     try {
-      const res = await fetch('/admin/offers', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const res = await fetch('/admin/offers', { method: 'POST', headers: authHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify(payload) });
       if ((await res.json()).ok) {
         btn.textContent = 'Saved!';
         btn.classList.add('saved');

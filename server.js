@@ -97,6 +97,13 @@ function parseCookies(cookieHeader) {
 }
 
 function isAuthenticated(req) {
+  // Check Authorization header first (localStorage token approach)
+  const auth = req.headers['authorization'] || '';
+  if (auth.startsWith('Bearer ')) {
+    const token = auth.slice(7);
+    if (token && sessions.has(token)) return true;
+  }
+  // Fallback: cookie
   const cookies = parseCookies(req.headers.cookie);
   return cookies.adminToken && sessions.has(cookies.adminToken);
 }
@@ -121,8 +128,8 @@ const server = createServer(async (req, res) => {
     if (body.password === ADMIN_PASSWORD) {
       const token = randomBytes(32).toString('hex');
       sessions.add(token);
-      res.writeHead(200, { 'Content-Type': 'application/json', 'Set-Cookie': `adminToken=${token}; HttpOnly; Path=/; Max-Age=86400` });
-      res.end(JSON.stringify({ ok: true }));
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Set-Cookie': `adminToken=${token}; HttpOnly; Path=/; Max-Age=86400; Secure; SameSite=None` });
+      res.end(JSON.stringify({ ok: true, token }));
     } else {
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: false, error: 'Wrong password' }));
