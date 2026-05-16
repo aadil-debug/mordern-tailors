@@ -96,6 +96,28 @@
     .efb-cancel { background: #e5e5e5; color: #444; }
     .efb-save { background: #2563eb; color: #fff; }
     .efb-save:disabled { background: #93c5fd; cursor: wait; }
+    .ai-btn { padding: 8px 10px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 6px; cursor: pointer; transition: all 0.2s; color: #aaa; font-size: 12px; display: flex; align-items: center; }
+    .ai-btn:hover { background: #faf5ff; border-color: #c084fc; color: #9333ea; }
+    #ai-modal { max-width: 640px; width: 100%; }
+    .ai-modal-body { display: flex; gap: 18px; }
+    .ai-pane { flex: 1; min-width: 0; }
+    .ai-pane-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+    .ai-pane img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; background: #f0f0f0; border: 1.5px solid #e5e5e5; display: block; }
+    .ai-result-wrap { width: 100%; aspect-ratio: 1; border-radius: 8px; background: #f8f0ff; border: 1.5px dashed #c084fc; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; overflow: hidden; position: relative; }
+    .ai-result-wrap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+    .ai-spinner { width: 32px; height: 32px; border: 3px solid #e9d5ff; border-top-color: #9333ea; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ai-spinner-text { font-size: 12px; color: #9333ea; font-weight: 500; }
+    .ai-prompt-area { width: 100%; min-height: 72px; resize: vertical; padding: 8px 10px; border: 1.5px solid #e2e8f0; border-radius: 6px; font-size: 13px; font-family: inherit; box-sizing: border-box; }
+    .ai-prompt-area:focus { outline: none; border-color: #c084fc; }
+    .ai-prompt-hint { font-size: 11px; color: #aaa; margin-top: 5px; }
+    .ai-gen-btn { width: 100%; padding: 9px; background: #9333ea; border: none; border-radius: 7px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 10px; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+    .ai-gen-btn:hover { background: #7e22ce; }
+    .ai-gen-btn:disabled { background: #c084fc; cursor: wait; }
+    .ai-apply-btn { flex: 1; padding: 9px; background: #22c55e; border: none; border-radius: 7px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .ai-apply-btn:disabled { background: #86efac; cursor: default; }
+    .ai-discard-btn { padding: 9px 16px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 7px; color: #444; font-size: 13px; font-weight: 500; cursor: pointer; }
+    .ai-modal-actions { display: flex; gap: 8px; margin-top: 16px; }
 
     /* MODALS shared */
     .overlay-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -259,6 +281,39 @@
   </div>
 </div>
 
+<!-- AI Reimagine modal -->
+<div class="overlay-dim" id="ai-overlay">
+  <div class="modal-box" id="ai-modal">
+    <h2>✦ AI Reimagine</h2>
+    <p class="modal-sub" id="ai-modal-sub">Describe what you want the new image to look like</p>
+    <div class="ai-modal-body">
+      <div class="ai-pane">
+        <div class="ai-pane-label">Current</div>
+        <img id="ai-current-img" src="" alt="current" />
+      </div>
+      <div class="ai-pane">
+        <div class="ai-pane-label">AI Result</div>
+        <div class="ai-result-wrap" id="ai-result-wrap">
+          <div class="ai-spinner" id="ai-spinner" style="display:none"></div>
+          <div class="ai-spinner-text" id="ai-spinner-text" style="display:none">Generating…</div>
+          <svg id="ai-placeholder-icon" width="36" height="36" fill="none" stroke="#c084fc" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          <img id="ai-result-img" src="" alt="result" style="display:none" />
+        </div>
+        <textarea class="ai-prompt-area" id="ai-prompt" placeholder="e.g. silk saree in deep red with gold border, professional studio photo, soft lighting"></textarea>
+        <div class="ai-prompt-hint">Be specific — fabric, colour, style, lighting. Takes ~10–20 seconds.</div>
+        <button class="ai-gen-btn" id="ai-gen-btn">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          Generate Image
+        </button>
+      </div>
+    </div>
+    <div class="ai-modal-actions">
+      <button class="ai-discard-btn" id="ai-discard-btn">Discard</button>
+      <button class="ai-apply-btn" id="ai-apply-btn" disabled>Apply to Gallery</button>
+    </div>
+  </div>
+</div>
+
 <input type="file" id="replace-file-input" accept="image/*" />
 <input type="file" id="add-file-input" accept="image/*" />
 
@@ -364,6 +419,7 @@
     });
     galleryContainer.querySelectorAll('.delete-btn').forEach(btn => wireDeleteBtn(btn));
     galleryContainer.querySelectorAll('.edit-btn').forEach(btn => wireEditBtn(btn));
+    galleryContainer.querySelectorAll('.ai-btn').forEach(btn => wireAIBtn(btn));
     initDragDrop();
   }
 
@@ -385,6 +441,9 @@
         <div class="card-id">ID #${item.id} · ${item.category}</div>
         <div class="card-btns">
           <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">Replace Photo</button>
+          <button class="ai-btn" data-id="${item.id}" data-src="${item.src}" data-label="${item.label}" title="AI Reimagine">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          </button>
           <button class="edit-btn" data-id="${item.id}" title="Edit label / category">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           </button>
@@ -417,6 +476,120 @@
       </div>`;
     return card;
   }
+
+  // ── AI REIMAGINE ──────────────────────────────────────────
+  let aiItemId = null;
+  let aiGeneratedUrl = null;
+
+  function wireAIBtn(btn) {
+    if (!btn) return;
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      aiItemId = btn.dataset.id;
+      aiGeneratedUrl = null;
+      // Set current image
+      $('ai-current-img').src = btn.dataset.src;
+      $('ai-modal-sub').textContent = btn.dataset.label || 'Describe what you want the new image to look like';
+      // Reset result pane
+      $('ai-result-img').style.display = 'none';
+      $('ai-result-img').src = '';
+      $('ai-placeholder-icon').style.display = '';
+      $('ai-spinner').style.display = 'none';
+      $('ai-spinner-text').style.display = 'none';
+      $('ai-prompt').value = '';
+      $('ai-gen-btn').disabled = false;
+      $('ai-gen-btn').textContent = '';
+      $('ai-gen-btn').innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> Generate Image';
+      $('ai-apply-btn').disabled = true;
+      $('ai-overlay').classList.add('active');
+    });
+  }
+
+  $('ai-gen-btn').addEventListener('click', async () => {
+    const prompt = $('ai-prompt').value.trim();
+    if (!prompt) { $('ai-prompt').focus(); return; }
+    // Show spinner
+    $('ai-placeholder-icon').style.display = 'none';
+    $('ai-result-img').style.display = 'none';
+    $('ai-spinner').style.display = '';
+    $('ai-spinner-text').style.display = '';
+    $('ai-gen-btn').disabled = true;
+    $('ai-gen-btn').innerHTML = 'Generating…';
+    $('ai-apply-btn').disabled = true;
+    aiGeneratedUrl = null;
+    try {
+      const res = await fetch('/admin/ai-reimagine', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId: aiItemId, prompt })
+      });
+      const data = await res.json();
+      if (data.ok && data.previewUrl) {
+        aiGeneratedUrl = data.previewUrl;
+        const img = $('ai-result-img');
+        img.onload = () => {
+          $('ai-spinner').style.display = 'none';
+          $('ai-spinner-text').style.display = 'none';
+          img.style.display = '';
+          $('ai-apply-btn').disabled = false;
+        };
+        img.src = data.previewUrl + '?t=' + Date.now();
+      } else {
+        throw new Error(data.error || 'Generation failed');
+      }
+    } catch(e) {
+      $('ai-spinner').style.display = 'none';
+      $('ai-spinner-text').style.display = 'none';
+      $('ai-placeholder-icon').style.display = '';
+      alert('Generation failed: ' + e.message);
+    }
+    $('ai-gen-btn').disabled = false;
+    $('ai-gen-btn').innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg> Generate Again';
+  });
+
+  $('ai-apply-btn').addEventListener('click', async () => {
+    if (!aiGeneratedUrl || !aiItemId) return;
+    $('ai-apply-btn').disabled = true;
+    $('ai-apply-btn').textContent = 'Applying…';
+    try {
+      const res = await fetch('/admin/ai-apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId: aiItemId, previewUrl: aiGeneratedUrl })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        // Update card thumbnail on the page
+        const card = document.querySelector(`.gallery-card[data-id="${aiItemId}"]`);
+        if (card) {
+          card.querySelector('.card-img-wrap img').src = data.src + '?t=' + Date.now();
+          const aiBtn = card.querySelector('.ai-btn');
+          if (aiBtn) aiBtn.dataset.src = data.src;
+        }
+        $('ai-overlay').classList.remove('active');
+      } else {
+        alert('Apply failed: ' + (data.error || 'Unknown error'));
+        $('ai-apply-btn').disabled = false;
+        $('ai-apply-btn').textContent = 'Apply to Gallery';
+      }
+    } catch(e) {
+      alert('Apply failed: ' + e.message);
+      $('ai-apply-btn').disabled = false;
+      $('ai-apply-btn').textContent = 'Apply to Gallery';
+    }
+  });
+
+  $('ai-discard-btn').addEventListener('click', () => {
+    $('ai-overlay').classList.remove('active');
+    aiGeneratedUrl = null;
+    aiItemId = null;
+  });
+
+  $('ai-overlay').addEventListener('click', e => {
+    if (e.target === $('ai-overlay')) {
+      $('ai-overlay').classList.remove('active');
+    }
+  });
 
   // ── EDIT LABEL / CATEGORY ─────────────────────────────────
   function wireEditBtn(btn) {
@@ -766,6 +939,9 @@
 
     // Wire up edit button
     wireEditBtn(card.querySelector('.edit-btn'));
+
+    // Wire up AI button
+    wireAIBtn(card.querySelector('.ai-btn'));
 
     // Wire up drag events
     card.addEventListener('dragstart', onDragStart);

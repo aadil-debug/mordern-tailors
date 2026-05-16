@@ -1,0 +1,14 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "0jbnoESWPLrRZPbMhqOV4"
+uri = "file://attached_assets/test_rose.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "sRTBUceYlp5P03aJhY2M2"
+uri = "file://attached_assets/sky_test.png"
+type = "image"
+title = "generated_image"

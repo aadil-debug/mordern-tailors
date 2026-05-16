@@ -221,6 +221,56 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // AI reimagine — generate image from prompt via Pollinations.ai
+  if (urlPath === '/admin/ai-reimagine' && method === 'POST') {
+    if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const body = await parseBody(req);
+    const { prompt } = body;
+    if (!prompt) { res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'Missing prompt' })); return; }
+    try {
+      const seed = Math.floor(Math.random() * 1000000);
+      const apiUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&nologo=true&seed=${seed}&model=flux`;
+      const imgRes = await fetch(apiUrl);
+      if (!imgRes.ok) throw new Error(`Pollinations returned ${imgRes.status}`);
+      const arrayBuf = await imgRes.arrayBuffer();
+      const imgBuf = Buffer.from(arrayBuf);
+      const ts = Date.now();
+      const fileName = `ai-${ts}.png`;
+      const uploadDir = join(DIST, 'images/uploads');
+      await mkdir(uploadDir, { recursive: true });
+      await writeFile(join(uploadDir, fileName), imgBuf);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, previewUrl: `/images/uploads/${fileName}` }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: e.message }));
+    }
+    return;
+  }
+
+  // AI apply — set a previously-generated image on a gallery item
+  if (urlPath === '/admin/ai-apply' && method === 'POST') {
+    if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const body = await parseBody(req);
+    const { itemId, previewUrl } = body;
+    if (!itemId || !previewUrl) { res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'Missing fields' })); return; }
+    const items = await loadGalleryItems();
+    const idx = items.findIndex(it => it.id === parseInt(itemId));
+    if (idx < 0) { res.writeHead(404); res.end(JSON.stringify({ ok: false, error: 'Item not found' })); return; }
+    items[idx].src = previewUrl;
+    items[idx].thumb = previewUrl;
+    await dbSet('gallery_items', items);
+    let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
+    jsContent = jsContent.replace(
+      new RegExp(`(\\{id:${itemId},src:)"([^"]+)"(,thumb:)"([^"]+)"`, 'g'),
+      `$1"${previewUrl}"$3"${previewUrl}"`
+    );
+    await writeFile(join(DIST, 'assets/index.js'), jsContent);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, src: previewUrl }));
+    return;
+  }
+
   // Update item label/category
   if (urlPath === '/admin/update-item' && method === 'POST') {
     if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
