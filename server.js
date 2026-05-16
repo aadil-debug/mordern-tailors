@@ -6,7 +6,7 @@ import { randomBytes } from 'crypto';
 
 const PORT = 5000;
 const DIST = './dist';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'changeme';
+const ADMIN_PASSWORD = 'fazal1234';
 const DB_URL = process.env.REPLIT_DB_URL;
 
 const sessions = new Set();
