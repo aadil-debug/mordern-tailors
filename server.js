@@ -229,7 +229,7 @@ const server = createServer(async (req, res) => {
     if (!prompt) { res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'Missing prompt' })); return; }
     try {
       const seed = Math.floor(Math.random() * 1000000);
-      const apiUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&nologo=true&seed=${seed}&model=flux`;
+      const apiUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=800&height=800&seed=${seed}&model=flux`;
       const imgRes = await fetch(apiUrl);
       if (!imgRes.ok) throw new Error(`Pollinations returned ${imgRes.status}`);
       const arrayBuf = await imgRes.arrayBuffer();
