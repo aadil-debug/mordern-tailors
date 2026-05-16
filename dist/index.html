@@ -731,6 +731,58 @@
     </script>
     <script>
       (function () {
+        var BADGE_COLORS = {
+          'Sale':    { bg: '#dc2626', text: '#fff' },
+          'New':     { bg: '#16a34a', text: '#fff' },
+          'Popular': { bg: '#d97706', text: '#fff' }
+        };
+
+        function applyBadges(badged) {
+          if (!badged || !badged.length) return;
+          badged.forEach(function (item) {
+            var imgs = document.querySelectorAll('img[alt]');
+            imgs.forEach(function (img) {
+              var alt = img.getAttribute('alt') || '';
+              var src = img.getAttribute('src') || '';
+              var matched = alt === item.label || src.indexOf(item.src.split('/').pop()) !== -1;
+              if (!matched) return;
+              var wrap = img.parentElement;
+              if (!wrap || wrap.getAttribute('data-badge-applied')) return;
+              wrap.style.position = 'relative';
+              wrap.setAttribute('data-badge-applied', '1');
+              var pill = document.createElement('span');
+              var colors = BADGE_COLORS[item.badge] || { bg: '#2563eb', text: '#fff' };
+              pill.style.cssText = [
+                'position:absolute',
+                'top:8px',
+                'left:8px',
+                'background:' + colors.bg,
+                'color:' + colors.text,
+                'font-size:11px',
+                'font-weight:700',
+                'padding:3px 9px',
+                'border-radius:20px',
+                'letter-spacing:0.03em',
+                'pointer-events:none',
+                'z-index:10',
+                'box-shadow:0 1px 4px rgba(0,0,0,0.18)'
+              ].join(';');
+              pill.textContent = item.badge;
+              wrap.appendChild(pill);
+            });
+          });
+        }
+
+        fetch('/gallery-badges').then(function (r) { return r.json(); }).then(function (badged) {
+          if (!badged.length) return;
+          applyBadges(badged);
+          var obs = new MutationObserver(function () { applyBadges(badged); });
+          obs.observe(document.body, { childList: true, subtree: true });
+        }).catch(function () {});
+      })();
+    </script>
+    <script>
+      (function () {
         fetch('/offers').then(function (r) { return r.json(); }).then(function (data) {
           if (!data.enabled || !data.items || data.items.length === 0) return;
 

@@ -91,6 +91,22 @@
     .edit-form label:first-child { margin-top: 0; }
     .edit-form input, .edit-form select { width: 100%; padding: 6px 8px; border: 1.5px solid #e2e8f0; border-radius: 5px; font-size: 12px; background: #fff; box-sizing: border-box; }
     .edit-form input:focus, .edit-form select:focus { outline: none; border-color: #93c5fd; }
+    .badge-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+    .badge-chip { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1.5px solid transparent; opacity: 0.55; transition: opacity 0.15s, border-color 0.15s; }
+    .badge-chip.selected { opacity: 1; border-color: #1a1a1a; }
+    .badge-chip.bc-none { background: #f0f0f0; color: #888; }
+    .badge-chip.bc-sale { background: #fee2e2; color: #dc2626; }
+    .badge-chip.bc-new { background: #dcfce7; color: #16a34a; }
+    .badge-chip.bc-popular { background: #fef3c7; color: #d97706; }
+    .badge-chip.bc-custom { background: #eff6ff; color: #2563eb; }
+    .badge-custom-input { display: none; width: 100%; padding: 5px 8px; border: 1.5px solid #e2e8f0; border-radius: 5px; font-size: 12px; margin-top: 5px; box-sizing: border-box; }
+    .badge-custom-input.visible { display: block; }
+    .badge-custom-input:focus { outline: none; border-color: #93c5fd; }
+    .card-badge-pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-top: 4px; }
+    .card-badge-pill.bp-sale { background: #fee2e2; color: #dc2626; }
+    .card-badge-pill.bp-new { background: #dcfce7; color: #16a34a; }
+    .card-badge-pill.bp-popular { background: #fef3c7; color: #d97706; }
+    .card-badge-pill.bp-custom { background: #eff6ff; color: #2563eb; }
     .edit-form-btns { display: flex; gap: 5px; margin-top: 8px; }
     .edit-form-btns button { flex: 1; padding: 6px; border-radius: 5px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; }
     .efb-cancel { background: #e5e5e5; color: #444; }
@@ -513,7 +529,7 @@
       </div>
       <div class="card-info">
         <div class="card-label">${item.label}</div>
-        <div class="card-id">ID #${item.id} · ${item.category}</div>
+        <div class="card-id">ID #${item.id} · ${item.category}${item.badge ? ` <span class="card-badge-pill ${item.badge==='Sale'?'bp-sale':item.badge==='New'?'bp-new':item.badge==='Popular'?'bp-popular':'bp-custom'}">${item.badge}</span>` : ''}</div>
         <div class="card-btns">
           <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">Replace Photo</button>
           <button class="ai-btn" data-id="${item.id}" data-src="${item.src}" data-label="${item.label}" title="AI Reimagine">
@@ -536,6 +552,15 @@
             <option value="kids" ${item.category==='kids'?'selected':''}>Kids Wear</option>
             <option value="wedding" ${item.category==='wedding'?'selected':''}>Wedding Wear</option>
           </select>
+          <label>Sale Badge</label>
+          <div class="badge-chips">
+            <span class="badge-chip bc-none ${!item.badge?'selected':''}" data-val="">None</span>
+            <span class="badge-chip bc-sale ${item.badge==='Sale'?'selected':''}" data-val="Sale">Sale</span>
+            <span class="badge-chip bc-new ${item.badge==='New'?'selected':''}" data-val="New">New</span>
+            <span class="badge-chip bc-popular ${item.badge==='Popular'?'selected':''}" data-val="Popular">Popular</span>
+            <span class="badge-chip bc-custom ${(item.badge&&item.badge!=='Sale'&&item.badge!=='New'&&item.badge!=='Popular')?'selected':''}" data-val="__custom">Custom…</span>
+          </div>
+          <input type="text" class="badge-custom-input ${(item.badge&&item.badge!=='Sale'&&item.badge!=='New'&&item.badge!=='Popular')?'visible':''}" placeholder="e.g. 20% Off" maxlength="20" value="${(item.badge&&item.badge!=='Sale'&&item.badge!=='New'&&item.badge!=='Popular')?item.badge:''}" />
           <div class="edit-form-btns">
             <button class="efb-cancel" data-id="${item.id}">Cancel</button>
             <button class="efb-save" data-id="${item.id}">Save</button>
@@ -692,26 +717,67 @@
     }
   });
 
+  // Badge chip click handler
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('.badge-chip');
+    if (!chip) return;
+    const chips = chip.closest('.badge-chips');
+    if (!chips) return;
+    chips.querySelectorAll('.badge-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    const customInput = chip.closest('.edit-form').querySelector('.badge-custom-input');
+    if (customInput) {
+      if (chip.dataset.val === '__custom') {
+        customInput.classList.add('visible');
+        customInput.focus();
+      } else {
+        customInput.classList.remove('visible');
+      }
+    }
+  });
+
+  function getBadgeClass(badge) {
+    if (badge === 'Sale') return 'bp-sale';
+    if (badge === 'New') return 'bp-new';
+    if (badge === 'Popular') return 'bp-popular';
+    return 'bp-custom';
+  }
+
   async function saveEditItem(itemId, saveBtn) {
     const form = $('ef-' + itemId);
     if (!form) return;
     const label = form.querySelector('.ef-label').value.trim();
     const category = form.querySelector('.ef-category').value;
     if (!label) { form.querySelector('.ef-label').focus(); return; }
+    const selectedChip = form.querySelector('.badge-chip.selected');
+    let badge = selectedChip ? selectedChip.dataset.val : '';
+    if (badge === '__custom') {
+      badge = form.querySelector('.badge-custom-input').value.trim();
+    }
     saveBtn.disabled = true;
     saveBtn.textContent = 'Saving…';
     try {
       const res = await fetch('/admin/update-item', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId, label, category })
+        body: JSON.stringify({ itemId, label, category, badge })
       });
       const data = await res.json();
       if (data.ok) {
         const card = document.querySelector(`.gallery-card[data-id="${itemId}"]`);
         if (card) {
           card.querySelector('.card-label').textContent = label;
-          card.querySelector('.card-id').textContent = `ID #${itemId} · ${category}`;
+          const idEl = card.querySelector('.card-id');
+          const existingPill = idEl.querySelector('.card-badge-pill');
+          if (existingPill) existingPill.remove();
+          idEl.textContent = `ID #${itemId} · ${category}`;
+          if (badge) {
+            const pill = document.createElement('span');
+            pill.className = `card-badge-pill ${getBadgeClass(badge)}`;
+            pill.textContent = badge;
+            idEl.appendChild(document.createTextNode(' '));
+            idEl.appendChild(pill);
+          }
           const replBtn = card.querySelector('.replace-btn');
           if (replBtn) { replBtn.dataset.label = label; replBtn.dataset.cat = category; }
         }

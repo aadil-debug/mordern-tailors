@@ -290,10 +290,19 @@ const server = createServer(async (req, res) => {
   }
 
   // Update item label/category
+  // Public badge data endpoint
+  if (urlPath === '/gallery-badges' && method === 'GET') {
+    const items = await loadGalleryItems();
+    const badged = items.filter(it => it.badge).map(it => ({ id: it.id, src: it.src, label: it.label, badge: it.badge }));
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(badged));
+    return;
+  }
+
   if (urlPath === '/admin/update-item' && method === 'POST') {
     if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
     const body = await parseBody(req);
-    const { itemId, label, category } = body;
+    const { itemId, label, category, badge } = body;
     if (!itemId || !label || !category) { res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'Missing fields' })); return; }
     const id = parseInt(itemId);
     const items = await loadGalleryItems();
@@ -302,6 +311,7 @@ const server = createServer(async (req, res) => {
     items[idx].label = label;
     items[idx].category = category;
     items[idx].alt = `${label} custom tailored ${category} Mumbai`;
+    items[idx].badge = badge || '';
     await dbSet('gallery_items', items);
     let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
     const pat = new RegExp(`(\\{id:${id},src:"[^"]+",thumb:"[^"]+",alt:)"[^"]+"(,category:)"[^"]+"(,label:)"[^"]+"`, 'g');
