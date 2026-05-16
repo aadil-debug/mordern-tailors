@@ -729,5 +729,47 @@
         });
       })();
     </script>
+    <script>
+      (function () {
+        fetch('/offers').then(function (r) { return r.json(); }).then(function (data) {
+          if (!data.enabled || !data.items || data.items.length === 0) return;
+
+          var style = document.createElement('style');
+          style.textContent = [
+            '@keyframes mt-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }',
+            '#mt-ticker-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 38px; display: flex; align-items: center; overflow: hidden; }',
+            '#mt-ticker-track { display: flex; align-items: center; white-space: nowrap; animation: mt-scroll 40s linear infinite; }',
+            '#mt-ticker-bar:hover #mt-ticker-track { animation-play-state: paused; cursor: default; }'
+          ].join('');
+          document.head.appendChild(style);
+
+          var bar = document.createElement('div');
+          bar.id = 'mt-ticker-bar';
+          bar.style.background = data.bgColor || '#b8962e';
+          bar.style.color = data.textColor || '#ffffff';
+          bar.style.fontSize = '13px';
+          bar.style.fontWeight = '600';
+          bar.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+          bar.style.letterSpacing = '0.01em';
+
+          var track = document.createElement('div');
+          track.id = 'mt-ticker-track';
+
+          var doubled = data.items.concat(data.items);
+          doubled.forEach(function (item) {
+            var span = document.createElement('span');
+            span.style.padding = '0 52px';
+            span.innerHTML = '✦&nbsp;&nbsp;' + item;
+            track.appendChild(span);
+          });
+
+          bar.appendChild(track);
+          document.body.insertBefore(bar, document.body.firstChild);
+
+          var root = document.getElementById('root');
+          if (root) root.style.paddingTop = '38px';
+        }).catch(function () {});
+      })();
+    </script>
   </body>
 </html>

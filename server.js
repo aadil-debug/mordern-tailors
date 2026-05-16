@@ -139,6 +139,24 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Get offers (public)
+  if (urlPath === '/offers' && method === 'GET') {
+    const offers = await dbGet('offers') || { enabled: true, bgColor: '#b8962e', textColor: '#ffffff', items: ['Special offer on bridal wear this season!', 'Free consultation for all new customers', '10% off on alterations this month'] };
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(offers));
+    return;
+  }
+
+  // Save offers (admin)
+  if (urlPath === '/admin/offers' && method === 'POST') {
+    if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const body = await parseBody(req);
+    await dbSet('offers', body);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true }));
+    return;
+  }
+
   // Gallery data (admin)
   if (urlPath === '/admin/gallery-data' && method === 'GET') {
     if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }

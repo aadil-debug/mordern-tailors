@@ -160,6 +160,39 @@
     .add-success { background: #f0fdf4; border: 1.5px solid #86efac; border-radius: 10px; padding: 16px; margin-top: 16px; display: none; }
     .add-success p { font-size: 14px; color: #166534; font-weight: 500; }
 
+    /* OFFERS TICKER */
+    .offers-section { background: #fff; border-radius: 12px; border: 1.5px solid #e8e8e8; padding: 24px 28px; margin-bottom: 28px; }
+    .offers-section h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .offers-section .offers-sub { font-size: 13px; color: #888; margin-bottom: 20px; }
+    .offers-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; background: #f8f8f8; border-radius: 8px; padding: 12px 16px; }
+    .offers-toggle-label { font-size: 14px; font-weight: 600; }
+    .toggle-switch { position: relative; width: 44px; height: 24px; cursor: pointer; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-track { position: absolute; inset: 0; background: #ddd; border-radius: 24px; transition: background 0.2s; }
+    .toggle-switch input:checked + .toggle-track { background: #b8962e; }
+    .toggle-knob { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+    .toggle-switch input:checked ~ .toggle-knob { transform: translateX(20px); }
+    .offers-colors { display: flex; gap: 16px; margin-bottom: 18px; }
+    .color-field { flex: 1; }
+    .color-field label { font-size: 12px; font-weight: 600; color: #555; display: block; margin-bottom: 6px; }
+    .color-field-row { display: flex; align-items: center; gap: 8px; }
+    .color-field input[type="color"] { width: 36px; height: 36px; border: 1.5px solid #e0e0e0; border-radius: 6px; padding: 2px; cursor: pointer; background: none; }
+    .color-field input[type="text"] { flex: 1; padding: 8px 10px; border: 1.5px solid #e0e0e0; border-radius: 6px; font-size: 13px; font-family: monospace; }
+    .color-field input[type="text"]:focus { outline: none; border-color: #b8962e; }
+    .offers-items-label { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 8px; }
+    .offers-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .offer-item-row { display: flex; align-items: center; gap: 8px; }
+    .offer-item-row input[type="text"] { flex: 1; padding: 9px 12px; border: 1.5px solid #e0e0e0; border-radius: 7px; font-size: 13px; }
+    .offer-item-row input[type="text"]:focus { outline: none; border-color: #b8962e; }
+    .offer-remove-btn { padding: 8px 10px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 6px; cursor: pointer; color: #aaa; font-size: 14px; line-height: 1; transition: all 0.2s; flex-shrink: 0; }
+    .offer-remove-btn:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+    .offer-add-btn { display: flex; align-items: center; gap: 6px; background: none; border: 1.5px dashed #d0d0d0; border-radius: 7px; padding: 9px 14px; font-size: 13px; color: #888; cursor: pointer; width: 100%; justify-content: center; transition: all 0.2s; margin-bottom: 18px; }
+    .offer-add-btn:hover { border-color: #b8962e; color: #b8962e; background: #fffbeb; }
+    .offers-save-btn { width: 100%; padding: 12px; background: #b8962e; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .offers-save-btn:hover { background: #9a7d26; }
+    .offers-save-btn:disabled { background: #ccc; cursor: wait; }
+    .offers-save-btn.saved { background: #22c55e; }
+
     /* LOADING */
     #loading-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #f4f4f4; flex-direction: column; gap: 14px; }
     .spinner { width: 36px; height: 36px; border: 3px solid #e0e0e0; border-top-color: #b8962e; border-radius: 50%; animation: spin 0.8s linear infinite; }
@@ -218,6 +251,48 @@
       <div class="dot"></div>
       <span><strong>All changes save permanently.</strong> Replace a photo with "Replace Photo", drag cards to reorder then hit Save Order, or click "Add New Photo" to add a brand new gallery entry.</span>
     </div>
+
+    <!-- Offers Ticker Section -->
+    <div class="offers-section">
+      <h3>📢 Offers Ticker Bar</h3>
+      <p class="offers-sub">Controls the scrolling announcement bar shown at the top of the home page.</p>
+
+      <div class="offers-toggle-row">
+        <span class="offers-toggle-label">Show ticker bar on home page</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="offers-enabled" checked />
+          <div class="toggle-track"></div>
+          <div class="toggle-knob"></div>
+        </label>
+      </div>
+
+      <div class="offers-colors">
+        <div class="color-field">
+          <label>Background colour</label>
+          <div class="color-field-row">
+            <input type="color" id="offers-bg-picker" value="#b8962e" />
+            <input type="text" id="offers-bg-hex" value="#b8962e" maxlength="7" />
+          </div>
+        </div>
+        <div class="color-field">
+          <label>Text colour</label>
+          <div class="color-field-row">
+            <input type="color" id="offers-text-picker" value="#ffffff" />
+            <input type="text" id="offers-text-hex" value="#ffffff" maxlength="7" />
+          </div>
+        </div>
+      </div>
+
+      <div class="offers-items-label">Offer messages</div>
+      <div class="offers-list" id="offers-list"></div>
+      <button class="offer-add-btn" id="offer-add-btn">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add another offer
+      </button>
+
+      <button class="offers-save-btn" id="offers-save-btn">Save Ticker Settings</button>
+    </div>
+
     <div id="gallery-container">
       <div style="text-align:center;padding:60px;color:#aaa">Loading gallery...</div>
     </div>
@@ -956,6 +1031,88 @@
   }
 
   window.addEventListener('beforeunload', e => { if (hasUnsavedOrder) { e.preventDefault(); e.returnValue = ''; } });
+
+  // ── OFFERS TICKER ─────────────────────────────────────────
+  function addOfferRow(text) {
+    const row = document.createElement('div');
+    row.className = 'offer-item-row';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = text || '';
+    input.placeholder = 'e.g. 10% off on all bridal wear this season!';
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'offer-remove-btn';
+    removeBtn.title = 'Remove';
+    removeBtn.innerHTML = '&times;';
+    removeBtn.addEventListener('click', function () { row.remove(); });
+    row.appendChild(input);
+    row.appendChild(removeBtn);
+    $('offers-list').appendChild(row);
+  }
+
+  function syncColorPair(picker, hex) {
+    picker.addEventListener('input', function () { hex.value = this.value; });
+    hex.addEventListener('input', function () {
+      if (/^#[0-9a-fA-F]{6}$/.test(this.value)) picker.value = this.value;
+    });
+  }
+
+  syncColorPair($('offers-bg-picker'), $('offers-bg-hex'));
+  syncColorPair($('offers-text-picker'), $('offers-text-hex'));
+
+  $('offer-add-btn').addEventListener('click', function () { addOfferRow(''); });
+
+  async function loadOffers() {
+    try {
+      const res = await fetch('/offers');
+      const data = await res.json();
+      $('offers-enabled').checked = !!data.enabled;
+      const bg = data.bgColor || '#b8962e';
+      const tc = data.textColor || '#ffffff';
+      $('offers-bg-picker').value = bg;
+      $('offers-bg-hex').value = bg;
+      $('offers-text-picker').value = tc;
+      $('offers-text-hex').value = tc;
+      $('offers-list').innerHTML = '';
+      (data.items || []).forEach(function (item) { addOfferRow(item); });
+      if (!data.items || data.items.length === 0) addOfferRow('');
+    } catch (e) {
+      addOfferRow('');
+    }
+  }
+
+  $('offers-save-btn').addEventListener('click', async function () {
+    const btn = $('offers-save-btn');
+    const items = [...$('offers-list').querySelectorAll('input[type="text"]')]
+      .map(function (i) { return i.value.trim(); })
+      .filter(function (v) { return v.length > 0; });
+    const payload = {
+      enabled: $('offers-enabled').checked,
+      bgColor: $('offers-bg-hex').value || '#b8962e',
+      textColor: $('offers-text-hex').value || '#ffffff',
+      items: items
+    };
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    try {
+      const res = await fetch('/admin/offers', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      if ((await res.json()).ok) {
+        btn.textContent = 'Saved!';
+        btn.classList.add('saved');
+        setTimeout(function () { btn.textContent = 'Save Ticker Settings'; btn.classList.remove('saved'); btn.disabled = false; }, 2200);
+      } else {
+        btn.textContent = 'Save failed'; btn.disabled = false;
+      }
+    } catch {
+      btn.textContent = 'Save failed'; btn.disabled = false;
+    }
+  });
+
+  const origShowAdmin = showAdmin;
+  function showAdmin(items) {
+    origShowAdmin(items);
+    loadOffers();
+  }
 
   checkAuth();
 </script>
