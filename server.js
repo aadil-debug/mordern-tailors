@@ -221,6 +221,29 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Update item label/category
+  if (urlPath === '/admin/update-item' && method === 'POST') {
+    if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
+    const body = await parseBody(req);
+    const { itemId, label, category } = body;
+    if (!itemId || !label || !category) { res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'Missing fields' })); return; }
+    const id = parseInt(itemId);
+    const items = await loadGalleryItems();
+    const idx = items.findIndex(it => it.id === id);
+    if (idx < 0) { res.writeHead(404); res.end(JSON.stringify({ ok: false, error: 'Item not found' })); return; }
+    items[idx].label = label;
+    items[idx].category = category;
+    items[idx].alt = `${label} custom tailored ${category} Mumbai`;
+    await dbSet('gallery_items', items);
+    let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
+    const pat = new RegExp(`(\\{id:${id},src:"[^"]+",thumb:"[^"]+",alt:)"[^"]+"(,category:)"[^"]+"(,label:)"[^"]+"`, 'g');
+    jsContent = jsContent.replace(pat, `$1"${items[idx].alt}"$2"${category}"$3"${label}"`);
+    await writeFile(join(DIST, 'assets/index.js'), jsContent);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, item: items[idx] }));
+    return;
+  }
+
   // Delete gallery item
   if (urlPath === '/admin/delete-item' && method === 'POST') {
     if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }

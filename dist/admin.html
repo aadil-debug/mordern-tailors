@@ -83,6 +83,19 @@
     .dcb-cancel { background: #e5e5e5; color: #444; }
     .dcb-yes { background: #dc2626; color: #fff; }
     .gallery-card.deleting { opacity: 0.4; pointer-events: none; transition: opacity 0.3s; }
+    .edit-btn { padding: 8px 10px; background: #f5f5f5; border: 1.5px solid #e5e5e5; border-radius: 6px; cursor: pointer; transition: all 0.2s; color: #aaa; font-size: 12px; display: flex; align-items: center; }
+    .edit-btn:hover { background: #eff6ff; border-color: #93c5fd; color: #2563eb; }
+    .edit-form { display: none; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 6px; padding: 10px; margin-top: 6px; }
+    .edit-form.visible { display: block; }
+    .edit-form label { font-size: 11px; font-weight: 600; color: #666; display: block; margin-bottom: 3px; margin-top: 7px; }
+    .edit-form label:first-child { margin-top: 0; }
+    .edit-form input, .edit-form select { width: 100%; padding: 6px 8px; border: 1.5px solid #e2e8f0; border-radius: 5px; font-size: 12px; background: #fff; box-sizing: border-box; }
+    .edit-form input:focus, .edit-form select:focus { outline: none; border-color: #93c5fd; }
+    .edit-form-btns { display: flex; gap: 5px; margin-top: 8px; }
+    .edit-form-btns button { flex: 1; padding: 6px; border-radius: 5px; border: none; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .efb-cancel { background: #e5e5e5; color: #444; }
+    .efb-save { background: #2563eb; color: #fff; }
+    .efb-save:disabled { background: #93c5fd; cursor: wait; }
 
     /* MODALS shared */
     .overlay-dim { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -350,6 +363,7 @@
       });
     });
     galleryContainer.querySelectorAll('.delete-btn').forEach(btn => wireDeleteBtn(btn));
+    galleryContainer.querySelectorAll('.edit-btn').forEach(btn => wireEditBtn(btn));
     initDragDrop();
   }
 
@@ -371,9 +385,27 @@
         <div class="card-id">ID #${item.id} · ${item.category}</div>
         <div class="card-btns">
           <button class="replace-btn" data-id="${item.id}" data-label="${item.label}" data-cat="${item.category}" data-src="${item.src}">Replace Photo</button>
+          <button class="edit-btn" data-id="${item.id}" title="Edit label / category">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
           <button class="delete-btn" data-id="${item.id}" title="Delete">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
           </button>
+        </div>
+        <div class="edit-form" id="ef-${item.id}">
+          <label>Label</label>
+          <input type="text" class="ef-label" value="${item.label}" maxlength="60" />
+          <label>Category</label>
+          <select class="ef-category">
+            <option value="women" ${item.category==='women'?'selected':''}>Women's Apparel</option>
+            <option value="men" ${item.category==='men'?'selected':''}>Men's Apparel</option>
+            <option value="kids" ${item.category==='kids'?'selected':''}>Kids Wear</option>
+            <option value="wedding" ${item.category==='wedding'?'selected':''}>Wedding Wear</option>
+          </select>
+          <div class="edit-form-btns">
+            <button class="efb-cancel" data-id="${item.id}">Cancel</button>
+            <button class="efb-save" data-id="${item.id}">Save</button>
+          </div>
         </div>
         <div class="delete-confirm" id="dc-${item.id}">
           <span>Remove this photo?</span>
@@ -384,6 +416,70 @@
         </div>
       </div>`;
     return card;
+  }
+
+  // ── EDIT LABEL / CATEGORY ─────────────────────────────────
+  function wireEditBtn(btn) {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = btn.dataset.id;
+      const form = $('ef-' + id);
+      if (!form) return;
+      const isOpen = form.classList.contains('visible');
+      // Close all other open edit forms first
+      document.querySelectorAll('.edit-form.visible').forEach(f => f.classList.remove('visible'));
+      if (!isOpen) form.classList.add('visible');
+    });
+  }
+
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('efb-cancel')) {
+      e.stopPropagation();
+      const form = $('ef-' + e.target.dataset.id);
+      if (form) form.classList.remove('visible');
+    }
+    if (e.target.classList.contains('efb-save')) {
+      e.stopPropagation();
+      saveEditItem(e.target.dataset.id, e.target);
+    }
+  });
+
+  async function saveEditItem(itemId, saveBtn) {
+    const form = $('ef-' + itemId);
+    if (!form) return;
+    const label = form.querySelector('.ef-label').value.trim();
+    const category = form.querySelector('.ef-category').value;
+    if (!label) { form.querySelector('.ef-label').focus(); return; }
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving…';
+    try {
+      const res = await fetch('/admin/update-item', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId, label, category })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const card = document.querySelector(`.gallery-card[data-id="${itemId}"]`);
+        if (card) {
+          card.querySelector('.card-label').textContent = label;
+          card.querySelector('.card-id').textContent = `ID #${itemId} · ${category}`;
+          const replBtn = card.querySelector('.replace-btn');
+          if (replBtn) { replBtn.dataset.label = label; replBtn.dataset.cat = category; }
+        }
+        form.classList.remove('visible');
+        saveBtn.textContent = 'Save';
+        saveBtn.disabled = false;
+      } else {
+        alert('Save failed: ' + (data.error || 'Unknown error'));
+        saveBtn.textContent = 'Save';
+        saveBtn.disabled = false;
+      }
+    } catch {
+      alert('Save failed. Please try again.');
+      saveBtn.textContent = 'Save';
+      saveBtn.disabled = false;
+    }
   }
 
   // ── DELETE ───────────────────────────────────────────────
@@ -667,6 +763,9 @@
 
     // Wire up delete button
     wireDeleteBtn(card.querySelector('.delete-btn'));
+
+    // Wire up edit button
+    wireEditBtn(card.querySelector('.edit-btn'));
 
     // Wire up drag events
     card.addEventListener('dragstart', onDragStart);
