@@ -731,6 +731,101 @@
     </script>
     <script>
       (function () {
+        // ── Service → gallery query mapping ──────────────────
+        var SVC_MAP = {
+          "Women's Apparel":        "women",
+          "Men's Apparel":          "men",
+          "Kids Wear":              "kids",
+          "Wedding & Alterations":  "wedding",
+          "Lehenga Choli":          "lehenga",
+          "Blouse & Padded Blouse": "blouse",
+          "Gown & Corset Top":      "gown",
+          "Ready to Wear Saree":    "saree",
+          "Tops, Bottoms & Blazers":"blazer",
+          "Punjabi Dress":          "punjabi",
+          "Shirts & Trousers":      "shirt",
+          "Kurta & Bandi":          "kurta",
+          "Blazers & Suits":        "suit",
+          "Frocks & Dresses":       "frock",
+          "Kurta Pyjama":           "kurta",
+          "Sherwani & Party Wear":  "sherwani",
+          "School Uniforms":        "school",
+          "Groom's Sherwani":       "sherwani",
+          "Bridal Lehenga":         "lehenga",
+          "Bridesmaid Outfits":     "bridesmaid",
+          "Resizing & Repairs":     "alteration",
+          "Emergency Alterations":  "alteration"
+        };
+
+        // ── Apply gallery URL filter ──────────────────────────
+        function applyGalleryFilter() {
+          if (window.location.pathname !== '/gallery') return;
+          var q = new URLSearchParams(window.location.search).get('q');
+          if (!q) return;
+          var attempts = 0;
+          var t = setInterval(function () {
+            var inp = document.getElementById('mt-gallery-search');
+            if (inp) {
+              clearInterval(t);
+              inp.value = q;
+              inp.dispatchEvent(new Event('input', { bubbles: true }));
+              var clr = document.getElementById('mt-gallery-clear');
+              if (clr) clr.style.display = 'block';
+            }
+            if (++attempts > 150) clearInterval(t);
+          }, 100);
+        }
+
+        // ── Inject service links ──────────────────────────────
+        function injectServiceLinks() {
+          if (window.location.pathname !== '/services') return;
+          var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+          var node;
+          while ((node = walker.nextNode())) {
+            var txt = node.textContent.trim();
+            var q = SVC_MAP[txt];
+            if (!q) continue;
+            var el = node.parentElement;
+            if (!el || el.closest('a') || el.dataset.glk) continue;
+            el.dataset.glk = '1';
+            el.style.cursor = 'pointer';
+            el.style.textDecoration = 'underline';
+            el.style.textDecorationColor = 'rgba(184,150,46,0.6)';
+            el.style.textUnderlineOffset = '3px';
+            el.title = 'See in Gallery';
+            el.addEventListener('click', (function (query) {
+              return function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = '/gallery?q=' + encodeURIComponent(query);
+              };
+            }(q)));
+          }
+        }
+
+        // ── Hook into React Router navigation ────────────────
+        var _push = history.pushState.bind(history);
+        history.pushState = function () {
+          _push.apply(this, arguments);
+          applyGalleryFilter();
+          setTimeout(injectServiceLinks, 400);
+        };
+        window.addEventListener('popstate', function () {
+          applyGalleryFilter();
+          setTimeout(injectServiceLinks, 400);
+        });
+
+        // ── Watch DOM for late-rendered content ───────────────
+        new MutationObserver(function () {
+          if (window.location.pathname === '/services') injectServiceLinks();
+        }).observe(document.body, { childList: true, subtree: true });
+
+        applyGalleryFilter();
+        setTimeout(injectServiceLinks, 600);
+      })();
+    </script>
+    <script>
+      (function () {
         var BADGE_COLORS = {
           'Sale':    { bg: '#dc2626', text: '#fff' },
           'New':     { bg: '#16a34a', text: '#fff' },
