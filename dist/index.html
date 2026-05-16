@@ -820,21 +820,11 @@
 
           var TICKER_H = 38;
 
-          function shiftNavbar() {
-            var nav = document.querySelector('nav.fixed, header.fixed, [class*="fixed"][class*="top-0"]');
-            if (nav) {
-              nav.style.top = TICKER_H + 'px';
-              return true;
-            }
-            return false;
-          }
-
-          if (!shiftNavbar()) {
-            var obs = new MutationObserver(function () {
-              if (shiftNavbar()) obs.disconnect();
-            });
-            obs.observe(document.body, { childList: true, subtree: true });
-          }
+          var navStyle = document.createElement('style');
+          navStyle.id = 'mt-ticker-nav-fix';
+          navStyle.textContent =
+            'nav.fixed, header.fixed, [class*="fixed"][class*="top-0"]:not(#mt-ticker-bar) { top: ' + TICKER_H + 'px !important; }';
+          document.head.appendChild(navStyle);
 
           var root = document.getElementById('root');
           if (root) root.style.paddingTop = TICKER_H + 'px';
