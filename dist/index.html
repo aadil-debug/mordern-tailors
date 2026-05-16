@@ -766,8 +766,26 @@
           bar.appendChild(track);
           document.body.insertBefore(bar, document.body.firstChild);
 
+          var TICKER_H = 38;
+
+          function shiftNavbar() {
+            var nav = document.querySelector('nav.fixed, header.fixed, [class*="fixed"][class*="top-0"]');
+            if (nav) {
+              nav.style.top = TICKER_H + 'px';
+              return true;
+            }
+            return false;
+          }
+
+          if (!shiftNavbar()) {
+            var obs = new MutationObserver(function () {
+              if (shiftNavbar()) obs.disconnect();
+            });
+            obs.observe(document.body, { childList: true, subtree: true });
+          }
+
           var root = document.getElementById('root');
-          if (root) root.style.paddingTop = '38px';
+          if (root) root.style.paddingTop = TICKER_H + 'px';
         }).catch(function () {});
       })();
     </script>
