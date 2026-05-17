@@ -388,7 +388,7 @@
           <div class="ai-spinner" id="ai-spinner" style="display:none"></div>
           <div class="ai-spinner-text" id="ai-spinner-text" style="display:none">Generating…</div>
           <svg id="ai-placeholder-icon" width="36" height="36" fill="none" stroke="#c084fc" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-          <img id="ai-result-img" src="" alt="result" style="display:none" />
+          <img id="ai-result-img" src="" alt="result" style="display:none" crossorigin="anonymous" />
         </div>
         <textarea class="ai-prompt-area" id="ai-prompt" placeholder="e.g. silk saree in deep red with gold border, professional studio photo, soft lighting"></textarea>
         <div class="ai-prompt-hint">Be specific — fabric, colour, style, lighting. Takes ~10–20 seconds.</div>
@@ -662,12 +662,29 @@
     $('ai-apply-btn').disabled = true;
     $('ai-apply-btn').textContent = 'Applying…';
     try {
-      const res = await fetch('/admin/ai-apply', {
-        method: 'POST',
-        headers: authHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ itemId: aiItemId, previewUrl: aiGeneratedUrl })
-      });
-      const data = await res.json();
+      // Capture the image via canvas to get base64, then upload locally
+      const img = $('ai-result-img');
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth || 800;
+      canvas.height = img.naturalHeight || 800;
+      canvas.getContext('2d').drawImage(img, 0, 0);
+      let fileData;
+      try { fileData = canvas.toDataURL('image/png'); } catch(e) { fileData = null; }
+      let res, data;
+      if (fileData) {
+        res = await fetch('/admin/ai-apply-data', {
+          method: 'POST',
+          headers: authHeaders({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ itemId: aiItemId, fileData })
+        });
+      } else {
+        res = await fetch('/admin/ai-apply', {
+          method: 'POST',
+          headers: authHeaders({ 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ itemId: aiItemId, previewUrl: aiGeneratedUrl })
+        });
+      }
+      data = await res.json();
       if (data.ok) {
         // Update card thumbnail on the page
         const card = document.querySelector(`.gallery-card[data-id="${aiItemId}"]`);
