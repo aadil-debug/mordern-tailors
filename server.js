@@ -2,14 +2,10 @@ import { createServer } from 'http';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { join, extname } from 'path';
 import { existsSync, statSync } from 'fs';
-import { randomBytes } from 'crypto';
-
 const PORT = 5000;
 const DIST = './dist';
 const ADMIN_PASSWORD = 'fazal1234';
 const DB_URL = process.env.REPLIT_DB_URL;
-
-const sessions = new Set();
 
 const mimeTypes = {
   '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript',
@@ -97,15 +93,11 @@ function parseCookies(cookieHeader) {
 }
 
 function isAuthenticated(req) {
-  // Check Authorization header first (localStorage token approach)
   const auth = req.headers['authorization'] || '';
   if (auth.startsWith('Bearer ')) {
-    const token = auth.slice(7);
-    if (token && sessions.has(token)) return true;
+    return auth.slice(7) === ADMIN_PASSWORD;
   }
-  // Fallback: cookie
-  const cookies = parseCookies(req.headers.cookie);
-  return cookies.adminToken && sessions.has(cookies.adminToken);
+  return false;
 }
 
 function parseBody(req) {
@@ -126,10 +118,8 @@ const server = createServer(async (req, res) => {
   if (urlPath === '/admin/login' && method === 'POST') {
     const body = await parseBody(req);
     if (body.password === ADMIN_PASSWORD) {
-      const token = randomBytes(32).toString('hex');
-      sessions.add(token);
-      res.writeHead(200, { 'Content-Type': 'application/json', 'Set-Cookie': `adminToken=${token}; HttpOnly; Path=/; Max-Age=86400; Secure; SameSite=None` });
-      res.end(JSON.stringify({ ok: true, token }));
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, token: ADMIN_PASSWORD }));
     } else {
       res.writeHead(401, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: false, error: 'Wrong password' }));
@@ -139,9 +129,7 @@ const server = createServer(async (req, res) => {
 
   // Logout
   if (urlPath === '/admin/logout' && method === 'POST') {
-    const cookies = parseCookies(req.headers.cookie);
-    if (cookies.adminToken) sessions.delete(cookies.adminToken);
-    res.writeHead(200, { 'Content-Type': 'application/json', 'Set-Cookie': 'adminToken=; HttpOnly; Path=/; Max-Age=0' });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ ok: true }));
     return;
   }
