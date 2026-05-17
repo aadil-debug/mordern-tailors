@@ -452,6 +452,7 @@
     loginScreen.style.display = 'none';
     adminScreen.style.display = 'block';
     renderGallery(items);
+    loadOffers();
   }
 
   $('login-btn').addEventListener('click', async () => {
@@ -1182,12 +1183,6 @@
       btn.textContent = 'Save failed'; btn.disabled = false;
     }
   });
-
-  const origShowAdmin = showAdmin;
-  function showAdmin(items) {
-    origShowAdmin(items);
-    loadOffers();
-  }
 
   checkAuth();
 </script>
