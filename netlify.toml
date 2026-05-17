@@ -1,0 +1,21 @@
+[build]
+  publish = "dist"
+
+[functions]
+  node_bundler = "esbuild"
+
+[functions."gallery-js"]
+  included_files = ["dist/assets/index.js"]
+
+[functions."api"]
+  included_files = ["dist/assets/index.js"]
+
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
