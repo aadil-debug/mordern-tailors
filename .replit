@@ -37,3 +37,7 @@ stack = "BEST_EFFORT_FALLBACK"
 [userenv.shared]
 ADMIN_PASSWORD = "fazal1234"
 
+[deployment]
+deploymentTarget = "autoscale"
+run = ["node", "server.js"]
+
