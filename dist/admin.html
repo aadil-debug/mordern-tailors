@@ -472,7 +472,8 @@
         btn.textContent = 'Log In'; btn.disabled = false;
         $('password-input').value = '';
       }
-    } catch {
+    } catch (err) {
+      $('login-error').textContent = 'Error: ' + (err && err.message ? err.message : 'Network error. Try again.');
       $('login-error').style.display = 'block';
       btn.textContent = 'Log In'; btn.disabled = false;
     }

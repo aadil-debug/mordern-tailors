@@ -382,9 +382,15 @@ const server = createServer(async (req, res) => {
   // Admin page
   if (urlPath === '/admin' && method === 'GET') {
     try {
-      const data = await readFile(join(DIST, 'admin.html'));
-      res.writeHead(200, { 'Content-Type': 'text/html' });
-      res.end(data);
+      const urlParams = new URLSearchParams(req.url.split('?')[1] || '');
+      const keyParam = urlParams.get('key') || '';
+      let html = (await readFile(join(DIST, 'admin.html'))).toString();
+      // Inject auto-login script if correct key in URL
+      if (keyParam === ADMIN_PASSWORD) {
+        html = html.replace('</head>', `<script>localStorage.setItem('mt_admin_token','${ADMIN_PASSWORD}');</script></head>`);
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html', 'Cache-Control': 'no-store, no-cache, must-revalidate', 'Pragma': 'no-cache' });
+      res.end(html);
     } catch { res.writeHead(404); res.end('Admin page not found'); }
     return;
   }
