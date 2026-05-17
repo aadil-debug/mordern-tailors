@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "0jbnoESWPLrRZPbMhqOV4"
@@ -12,3 +11,9 @@ id = "sRTBUceYlp5P03aJhY2M2"
 uri = "file://attached_assets/sky_test.png"
 type = "image"
 title = "generated_image"
+
+[[outputs]]
+id = "epYAnmkQ0nvm1Y9-wDwst"
+uri = "file://modern-tailors-website.zip"
+type = "unspecified"
+title = "Modern Tailors Website"
