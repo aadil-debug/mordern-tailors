@@ -557,10 +557,10 @@
           <input type="text" class="ef-label" value="${item.label}" maxlength="60" />
           <label>Category</label>
           <select class="ef-category">
-            <option value="women" ${item.category==='women'?'selected':''}>Women's Apparel</option>
-            <option value="men" ${item.category==='men'?'selected':''}>Men's Apparel</option>
-            <option value="kids" ${item.category==='kids'?'selected':''}>Kids Wear</option>
-            <option value="wedding" ${item.category==='wedding'?'selected':''}>Wedding Wear</option>
+            <option value="Women's Apparel" ${(item.category==="Women's Apparel"||item.category==='women')?'selected':''}>Women's Apparel</option>
+            <option value="Men's Apparel" ${(item.category==="Men's Apparel"||item.category==='men')?'selected':''}>Men's Apparel</option>
+            <option value="Kids Wear" ${(item.category==='Kids Wear'||item.category==='kids')?'selected':''}>Kids Wear</option>
+            <option value="Wedding Wear" ${(item.category==='Wedding Wear'||item.category==='wedding')?'selected':''}>Wedding Wear</option>
           </select>
           <label>Sale Badge</label>
           <div class="badge-chips">
