@@ -1,0 +1,5 @@
+<svg width="200" height="70" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="70" fill="white" rx="4"/>
+  <text x="100" y="38" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-weight="700" fill="#1B3A6B" text-anchor="middle" letter-spacing="3">RAYMOND</text>
+  <text x="100" y="55" font-family="Georgia, 'Times New Roman', serif" font-size="9" fill="#1B3A6B" text-anchor="middle" letter-spacing="4" opacity="0.7">THE COMPLETE MAN</text>
+</svg>

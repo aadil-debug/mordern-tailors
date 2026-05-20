@@ -1,0 +1,6 @@
+<svg width="200" height="70" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="70" fill="white" rx="4"/>
+  <text x="100" y="36" font-family="Georgia, 'Times New Roman', serif" font-size="24" font-weight="700" fill="#003366" text-anchor="middle" letter-spacing="2">MAFATLAL</text>
+  <line x1="30" y1="44" x2="170" y2="44" stroke="#C8992A" stroke-width="1.5"/>
+  <text x="100" y="57" font-family="Arial, sans-serif" font-size="8.5" fill="#003366" text-anchor="middle" letter-spacing="3" opacity="0.65">EST. 1905</text>
+</svg>

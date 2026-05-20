@@ -1,0 +1,6 @@
+<svg width="200" height="70" viewBox="0 0 200 70" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="70" fill="white" rx="4"/>
+  <text x="100" y="36" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="800" fill="#00833E" text-anchor="middle" letter-spacing="5">LIVA</text>
+  <text x="100" y="50" font-family="Arial, sans-serif" font-size="8" fill="#555" text-anchor="middle" letter-spacing="1.5">by Aditya Birla Group</text>
+  <text x="100" y="62" font-family="Arial, sans-serif" font-size="7" fill="#00833E" text-anchor="middle" letter-spacing="2" opacity="0.75">ECO-ENHANCED FABRIC</text>
+</svg>
