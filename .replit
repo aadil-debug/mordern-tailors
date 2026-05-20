@@ -35,7 +35,6 @@ stack = "BEST_EFFORT_FALLBACK"
 [userenv]
 
 [userenv.shared]
-ADMIN_PASSWORD = "fazal1234"
 
 [deployment]
 deploymentTarget = "autoscale"
