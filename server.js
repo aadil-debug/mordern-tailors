@@ -1,7 +1,7 @@
 import { createServer } from 'http';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { join, extname } from 'path';
-import { existsSync, statSync } from 'fs';
+import { existsSync, statSync, createReadStream } from 'fs';
 const PORT = 5000;
 const DIST = './dist';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'fazal1234';
@@ -13,7 +13,8 @@ const mimeTypes = {
   '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon', '.webp': 'image/webp', '.woff': 'font/woff',
   '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.xml': 'application/xml',
-  '.txt': 'text/plain',
+  '.txt': 'text/plain', '.mp4': 'video/mp4', '.webm': 'video/webm',
+  '.mov': 'video/quicktime', '.ogg': 'video/ogg',
 };
 
 // ── Replit DB helpers ────────────────────────────────────────────────────────
@@ -429,10 +430,40 @@ const server = createServer(async (req, res) => {
     filePath = join(DIST, 'index.html');
   }
   try {
-    const data = await readFile(filePath);
     const ext = extname(filePath);
-    res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
-    res.end(data);
+    const contentType = mimeTypes[ext] || 'application/octet-stream';
+    const isVideo = ['.mp4', '.webm', '.mov', '.ogg'].includes(ext);
+
+    if (isVideo) {
+      const stat = statSync(filePath);
+      const fileSize = stat.size;
+      const rangeHeader = req.headers['range'];
+
+      if (rangeHeader) {
+        const parts = rangeHeader.replace(/bytes=/, '').split('-');
+        const start = parseInt(parts[0], 10);
+        const end = parts[1] ? parseInt(parts[1], 10) : Math.min(start + 1024 * 1024 - 1, fileSize - 1);
+        const chunkSize = end - start + 1;
+        res.writeHead(206, {
+          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': chunkSize,
+          'Content-Type': contentType,
+        });
+        createReadStream(filePath, { start, end }).pipe(res);
+      } else {
+        res.writeHead(200, {
+          'Content-Length': fileSize,
+          'Accept-Ranges': 'bytes',
+          'Content-Type': contentType,
+        });
+        createReadStream(filePath).pipe(res);
+      }
+    } else {
+      const data = await readFile(filePath);
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(data);
+    }
   } catch { res.writeHead(404); res.end('Not found'); }
 });
 
