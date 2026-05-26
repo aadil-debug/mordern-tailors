@@ -922,9 +922,25 @@
           if (window.location.pathname !== '/') { suppliersDone = false; return; }
 
           // Target the outer section wrapping "Getting Your Outfit Made Is Easy"
-          var section = document.querySelector('[data-hercules-id="src/pages/Index.tsx:428:6"]');
+          if (document.querySelector('[data-mt-suppliers]')) { suppliersDone = true; return; }
+          // Find the steps section by hercules-id or heading text fallback
+          var section = document.querySelector('[data-hercules-id="src/pages/Index.tsx:431:8"]') ||
+                        document.querySelector('[data-hercules-id="src/pages/Index.tsx:430:8"]');
+          if (!section) {
+            var allH2 = document.querySelectorAll('h2, h3');
+            for (var hi2 = 0; hi2 < allH2.length; hi2++) {
+              if (allH2[hi2].textContent.indexOf('Getting Your Outfit') !== -1) {
+                var n2 = allH2[hi2];
+                for (var u2 = 0; u2 < 8; u2++) {
+                  if (!n2.parentElement) break;
+                  n2 = n2.parentElement;
+                  if (n2.tagName.toLowerCase() === 'section') { section = n2; break; }
+                }
+                break;
+              }
+            }
+          }
           if (!section) return;
-          if (section.previousElementSibling && section.previousElementSibling.getAttribute('data-mt-suppliers')) { suppliersDone = true; return; }
 
           var wrapper = document.createElement('section');
           wrapper.setAttribute('data-mt-suppliers', '1');
@@ -1007,6 +1023,255 @@
           return fn;
         })(origPush2);
         window.addEventListener('popstate', function () { suppliersDone = false; });
+      })();
+    </script>
+    <script>
+      (function () {
+        var testimonials = [
+          { name: 'Priya Sharma',    location: 'Santacruz East',  rating: 5, text: 'Absolutely love my bridal lehenga! Fazal bhai understood exactly what I wanted and the fit was perfect. Highly recommend Modern Tailors to every bride.' },
+          { name: 'Rahul Mehta',     location: 'Vile Parle',      rating: 5, text: 'Got my sherwani stitched here for my wedding and it looked stunning. Quality fabric, great craftsmanship and delivered on time. 10/10!' },
+          { name: 'Sunita Joshi',    location: 'Kurla',           rating: 5, text: 'My go-to tailor for all my blouses. The padded blouse they made for me was flawless — perfect shape and finish every single time.' },
+          { name: 'Amir Khan',       location: 'Andheri',         rating: 5, text: 'Best tailor in Mumbai for suits! My office suits from Modern Tailors always get compliments. The attention to detail is exceptional.' },
+          { name: 'Deepa Nair',      location: 'Bandra',          rating: 5, text: 'Took my daughter\'s school uniform and my own salwar kameez — both came out beautifully. Very reasonable prices and friendly service.' },
+          { name: 'Vikram Desai',    location: 'Santacruz West',  rating: 5, text: 'Had an emergency alteration done the same day. They saved my event! Truly professional and caring team. Will always come back here.' }
+        ];
+
+        var GOLD = '#b8962e';
+        var testimonialsDone = false;
+        var currentIndex = 0;
+        var autoTimer = null;
+
+        function starHTML(n) {
+          var s = '';
+          for (var i = 0; i < 5; i++) {
+            s += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="' + (i < n ? GOLD : '#d1d5db') + '" style="display:inline;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+          }
+          return s;
+        }
+
+        function buildCard(t, active) {
+          var card = document.createElement('div');
+          card.setAttribute('data-mt-tcard', '1');
+          card.style.cssText = [
+            'background:#fff',
+            'border-radius:16px',
+            'padding:32px 28px',
+            'box-shadow:0 4px 24px rgba(0,0,0,0.08)',
+            'border:1px solid rgba(184,150,46,0.15)',
+            'flex:0 0 100%',
+            'max-width:520px',
+            'text-align:left',
+            'transition:opacity 0.4s,transform 0.4s',
+            'opacity:' + (active ? '1' : '0'),
+            'transform:' + (active ? 'scale(1)' : 'scale(0.96)'),
+            'position:absolute',
+            'top:0',
+            'left:0',
+            'right:0',
+            'pointer-events:' + (active ? 'auto' : 'none')
+          ].join(';');
+
+          var quote = document.createElement('div');
+          quote.style.cssText = 'font-size:40px;line-height:1;color:' + GOLD + ';margin-bottom:12px;font-family:Georgia,serif;opacity:0.6;';
+          quote.textContent = '\u201C';
+
+          var text = document.createElement('p');
+          text.style.cssText = 'font-size:15px;line-height:1.75;color:#374151;margin-bottom:20px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;';
+          text.textContent = t.text;
+
+          var stars = document.createElement('div');
+          stars.style.cssText = 'display:flex;gap:2px;margin-bottom:16px;';
+          stars.innerHTML = starHTML(t.rating);
+
+          var meta = document.createElement('div');
+          meta.style.cssText = 'display:flex;align-items:center;gap:12px;';
+
+          var avatar = document.createElement('div');
+          avatar.style.cssText = 'width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,' + GOLD + ',#8a6d1e);display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+          var initials = t.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase();
+          avatar.innerHTML = '<span style="color:#fff;font-size:15px;font-weight:700;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',sans-serif;">' + initials + '</span>';
+
+          var info = document.createElement('div');
+          var nameEl = document.createElement('p');
+          nameEl.style.cssText = 'font-size:14px;font-weight:700;color:#111827;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;';
+          nameEl.textContent = t.name;
+          var locEl = document.createElement('p');
+          locEl.style.cssText = 'font-size:12px;color:#9ca3af;margin:2px 0 0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;';
+          locEl.textContent = t.location + ', Mumbai';
+          info.appendChild(nameEl);
+          info.appendChild(locEl);
+
+          meta.appendChild(avatar);
+          meta.appendChild(info);
+
+          card.appendChild(quote);
+          card.appendChild(text);
+          card.appendChild(stars);
+          card.appendChild(meta);
+          return card;
+        }
+
+        function injectTestimonials() {
+          if (testimonialsDone) return;
+          if (window.location.pathname !== '/') { testimonialsDone = false; return; }
+
+          if (document.querySelector('[data-mt-testimonials]')) { testimonialsDone = true; return; }
+          // Find the steps section by hercules-id or by heading text fallback
+          var section = document.querySelector('[data-hercules-id="src/pages/Index.tsx:431:8"]') ||
+                        document.querySelector('[data-hercules-id="src/pages/Index.tsx:430:8"]');
+          if (!section) {
+            // Fallback: find by heading text content
+            var allH = document.querySelectorAll('h2, h3');
+            for (var hi = 0; hi < allH.length; hi++) {
+              if (allH[hi].textContent.indexOf('Getting Your Outfit') !== -1) {
+                var n = allH[hi];
+                for (var u = 0; u < 8; u++) {
+                  if (!n.parentElement) break;
+                  n = n.parentElement;
+                  if (n.tagName.toLowerCase() === 'section') { section = n; break; }
+                }
+                break;
+              }
+            }
+          }
+          if (!section) return;
+
+          var wrapper = document.createElement('section');
+          wrapper.setAttribute('data-mt-testimonials', '1');
+          wrapper.style.cssText = 'background:#f9f7f2;padding:80px 0;border-top:1px solid rgba(184,150,46,0.12);';
+
+          var inner = document.createElement('div');
+          inner.style.cssText = 'max-width:1100px;margin:0 auto;padding:0 24px;';
+
+          var eyebrow = document.createElement('p');
+          eyebrow.style.cssText = 'text-align:center;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:' + GOLD + ';margin-bottom:12px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;';
+          eyebrow.textContent = 'Happy Customers';
+
+          var title = document.createElement('h2');
+          title.style.cssText = 'text-align:center;font-size:clamp(24px,4vw,38px);font-weight:700;color:#111827;margin-bottom:10px;font-family:Georgia,"Times New Roman",serif;letter-spacing:-0.01em;';
+          title.textContent = 'What Our Customers Say';
+
+          var subtitle = document.createElement('p');
+          subtitle.style.cssText = 'text-align:center;font-size:15px;color:#6b7280;margin-bottom:52px;max-width:460px;margin-left:auto;margin-right:auto;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;';
+          subtitle.textContent = 'Thousands of happy customers across Mumbai trust us with their most special occasions.';
+
+          /* Carousel container */
+          var carouselOuter = document.createElement('div');
+          carouselOuter.style.cssText = 'max-width:520px;margin:0 auto;position:relative;';
+
+          var track = document.createElement('div');
+          track.setAttribute('data-mt-track', '1');
+          track.style.cssText = 'position:relative;min-height:280px;';
+
+          var cards = testimonials.map(function(t, i) {
+            return buildCard(t, i === 0);
+          });
+          cards.forEach(function(c) { track.appendChild(c); });
+
+          /* Dot indicators */
+          var dots = document.createElement('div');
+          dots.style.cssText = 'display:flex;justify-content:center;gap:8px;margin-top:28px;';
+          var dotEls = testimonials.map(function(_, i) {
+            var d = document.createElement('button');
+            d.style.cssText = 'width:' + (i===0?'24px':'8px') + ';height:8px;border-radius:999px;border:none;cursor:pointer;background:' + (i===0?GOLD:'#d1d5db') + ';transition:all 0.3s;padding:0;';
+            d.setAttribute('aria-label', 'Review ' + (i+1));
+            d.addEventListener('click', function() { goTo(i); });
+            return d;
+          });
+          dotEls.forEach(function(d) { dots.appendChild(d); });
+
+          /* Nav arrows */
+          var prevBtn = document.createElement('button');
+          prevBtn.style.cssText = 'position:absolute;top:50%;left:-52px;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(184,150,46,0.35);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.08);transition:border-color 0.2s,box-shadow 0.2s;color:#374151;font-size:16px;';
+          prevBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
+          prevBtn.setAttribute('aria-label', 'Previous review');
+          prevBtn.onmouseenter = function() { this.style.borderColor=GOLD; this.style.boxShadow='0 4px 16px rgba(184,150,46,0.25)'; };
+          prevBtn.onmouseleave = function() { this.style.borderColor='rgba(184,150,46,0.35)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'; };
+
+          var nextBtn = document.createElement('button');
+          nextBtn.style.cssText = 'position:absolute;top:50%;right:-52px;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;border:1.5px solid rgba(184,150,46,0.35);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.08);transition:border-color 0.2s,box-shadow 0.2s;color:#374151;font-size:16px;';
+          nextBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+          nextBtn.setAttribute('aria-label', 'Next review');
+          nextBtn.onmouseenter = function() { this.style.borderColor=GOLD; this.style.boxShadow='0 4px 16px rgba(184,150,46,0.25)'; };
+          nextBtn.onmouseleave = function() { this.style.borderColor='rgba(184,150,46,0.35)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'; };
+
+          function goTo(idx) {
+            var prev = currentIndex;
+            currentIndex = (idx + testimonials.length) % testimonials.length;
+            cards[prev].style.opacity = '0';
+            cards[prev].style.transform = 'scale(0.96)';
+            cards[prev].style.pointerEvents = 'none';
+            cards[currentIndex].style.opacity = '1';
+            cards[currentIndex].style.transform = 'scale(1)';
+            cards[currentIndex].style.pointerEvents = 'auto';
+            dotEls[prev].style.width = '8px';
+            dotEls[prev].style.background = '#d1d5db';
+            dotEls[currentIndex].style.width = '24px';
+            dotEls[currentIndex].style.background = GOLD;
+            resetAuto();
+          }
+
+          function resetAuto() {
+            if (autoTimer) clearInterval(autoTimer);
+            autoTimer = setInterval(function() { goTo(currentIndex + 1); }, 5000);
+          }
+
+          prevBtn.addEventListener('click', function() { goTo(currentIndex - 1); });
+          nextBtn.addEventListener('click', function() { goTo(currentIndex + 1); });
+
+          carouselOuter.appendChild(prevBtn);
+          carouselOuter.appendChild(track);
+          carouselOuter.appendChild(nextBtn);
+
+          /* Overall rating bar */
+          var ratingBar = document.createElement('div');
+          ratingBar.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:40px;flex-wrap:wrap;';
+          var bigStars = document.createElement('div');
+          bigStars.style.cssText = 'display:flex;gap:3px;';
+          bigStars.innerHTML = starHTML(5);
+          var bigStarsStyle = bigStars.querySelectorAll('svg');
+          bigStarsStyle.forEach(function(s) { s.setAttribute('width','22'); s.setAttribute('height','22'); });
+          var ratingText = document.createElement('span');
+          ratingText.style.cssText = 'font-size:15px;color:#374151;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-weight:600;';
+          ratingText.textContent = '5.0 out of 5 \u2022 Based on 200+ happy customers';
+          ratingBar.appendChild(bigStars);
+          ratingBar.appendChild(ratingText);
+
+          inner.appendChild(eyebrow);
+          inner.appendChild(title);
+          inner.appendChild(subtitle);
+          inner.appendChild(ratingBar);
+          inner.appendChild(carouselOuter);
+          inner.appendChild(dots);
+          wrapper.appendChild(inner);
+
+          section.parentNode.insertBefore(wrapper, section);
+          testimonialsDone = true;
+          resetAuto();
+        }
+
+        var tInterval = setInterval(injectTestimonials, 200);
+        setTimeout(function() { clearInterval(tInterval); }, 10000);
+        new MutationObserver(function() {
+          if (window.location.pathname === '/') injectTestimonials();
+        }).observe(document.body, { childList: true, subtree: true });
+
+        var _tPush = history.pushState.bind(history);
+        history.pushState = history.pushState.__mt_patchedT ? history.pushState : (function(orig) {
+          var fn = function() {
+            orig.apply(this, arguments);
+            testimonialsDone = false;
+            clearInterval(tInterval);
+            if (autoTimer) clearInterval(autoTimer);
+            if (window.location.pathname === '/') {
+              var i2 = setInterval(injectTestimonials, 200);
+              setTimeout(function() { clearInterval(i2); }, 10000);
+            }
+          };
+          fn.__mt_patchedT = true;
+          return fn;
+        })(_tPush);
+        window.addEventListener('popstate', function() { testimonialsDone = false; if (autoTimer) clearInterval(autoTimer); });
       })();
     </script>
     <script>
