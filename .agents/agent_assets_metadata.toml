@@ -17,3 +17,9 @@ id = "epYAnmkQ0nvm1Y9-wDwst"
 uri = "file://modern-tailors-website.zip"
 type = "unspecified"
 title = "Modern Tailors Website"
+
+[[outputs]]
+id = "0Qx29bcOtSJaZA1-MowjO"
+uri = "file://modern-tailors-hostinger.zip"
+type = "unspecified"
+title = "Modern Tailors — Hostinger Deployment Package"

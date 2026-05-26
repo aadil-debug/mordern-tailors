@@ -1,0 +1,506 @@
+[
+  {
+    "id": 1,
+    "src": "/images/uploads/ai-1778924809689.png",
+    "thumb": "/images/uploads/ai-1778924809689.png",
+    "alt": "Women's lehenga choli Indian traditional wear",
+    "category": "Women's Apparel",
+    "label": "Lehenga Choli"
+  },
+  {
+    "id": 2,
+    "src": "/images/uploads/ai-1778924989700.png",
+    "thumb": "/images/uploads/ai-1778924989700.png",
+    "alt": "Designer lehenga green gold embroidery custom stitched Mumbai",
+    "category": "Women's Apparel",
+    "label": "Designer Lehenga"
+  },
+  {
+    "id": 5,
+    "src": "/images/uploads/ai-1779001898613.png",
+    "thumb": "/images/uploads/ai-1779001898613.png",
+    "alt": "Embroidered bridal gown blue and red custom stitched Mumbai",
+    "category": "Women's Apparel",
+    "label": "Bridal Gown"
+  },
+  {
+    "id": 4,
+    "src": "/images/womens/blouse-pink.jpg",
+    "thumb": "/images/womens/blouse-pink.jpg",
+    "alt": "Pink silk V-neck blouse custom stitched Mumbai",
+    "category": "Women's Apparel",
+    "label": "Silk Blouse"
+  },
+  {
+    "id": 6,
+    "src": "/images/uploads/ai-1778925079577.png",
+    "thumb": "/images/uploads/ai-1778925079577.png",
+    "alt": "Women's tailored blazers navy and burgundy custom stitching Mumbai",
+    "category": "Women's Apparel",
+    "label": "Women's Blazer"
+  },
+  {
+    "id": 7,
+    "src": "/images/uploads/ai-1778924900313.png",
+    "thumb": "/images/uploads/ai-1778924900313.png",
+    "alt": "Ready to wear maroon saree peacock gold border custom stitching Mumbai",
+    "category": "Women's Apparel",
+    "label": "Ready to Wear Saree"
+  },
+  {
+    "id": 8,
+    "src": "/images/womens/saree-silk.jpg",
+    "thumb": "/images/womens/saree-silk.jpg",
+    "alt": "Maroon silk saree gold peacock border custom stitching Mumbai",
+    "category": "Women's Apparel",
+    "label": "Silk Saree"
+  },
+  {
+    "id": 9,
+    "src": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Women's Punjabi dress salwar kameez tailoring",
+    "category": "Women's Apparel",
+    "label": "Punjabi Dress"
+  },
+  {
+    "id": 10,
+    "src": "/images/uploads/gallery-10-1779002709481.png",
+    "thumb": "/images/uploads/gallery-10-1779002709481.png",
+    "alt": "Women's custom tailored wide-leg trousers pants Mumbai",
+    "category": "Women's Apparel",
+    "label": "Bottoms"
+  },
+  {
+    "id": 61,
+    "src": "/images/uploads/gallery-61-1779002519799.png",
+    "thumb": "/images/uploads/gallery-61-1779002519799.png",
+    "alt": "Corset top custom stitched fashion Santacruz",
+    "category": "Women's Apparel",
+    "label": "Corset Top"
+  },
+  {
+    "id": 62,
+    "src": "/images/uploads/gallery-62-1779002646549.png",
+    "thumb": "/images/uploads/gallery-62-1779002646549.png",
+    "alt": "Fitted corset top tailored outfit Mumbai",
+    "category": "Women's Apparel",
+    "label": "Corset Top"
+  },
+  {
+    "id": 63,
+    "src": "/images/uploads/ai-1778925169630.png",
+    "thumb": "/images/uploads/ai-1778925169630.png",
+    "alt": "Western top custom stitching Mumbai tailor",
+    "category": "Women's Apparel",
+    "label": "Western Top"
+  },
+  {
+    "id": 64,
+    "src": "/images/uploads/gallery-64-1779003135669.jpeg",
+    "thumb": "/images/uploads/gallery-64-1779003135669.jpeg",
+    "alt": "Fashion western top tailored Santacruz",
+    "category": "Women's Apparel",
+    "label": "Western Top"
+  },
+  {
+    "id": 65,
+    "src": "/images/uploads/gallery-65-1779002803098.png",
+    "thumb": "/images/uploads/gallery-65-1779002803098.png",
+    "alt": "Western style outfit custom stitched Mumbai",
+    "category": "Women's Apparel",
+    "label": "Western Top"
+  },
+  {
+    "id": 66,
+    "src": "/images/uploads/ai-1778925439473.png",
+    "thumb": "/images/uploads/ai-1778925439473.png",
+    "alt": "Elegant evening gown custom stitched Mumbai",
+    "category": "Women's Apparel",
+    "label": "Gown"
+  },
+  {
+    "id": 67,
+    "src": "/images/uploads/gallery-67-1779005234493.jpeg",
+    "thumb": "/images/uploads/gallery-67-1779005234493.jpeg",
+    "alt": "Formal gown tailored Santacruz Mumbai",
+    "category": "Women's Apparel",
+    "label": "Gown"
+  },
+  {
+    "id": 68,
+    "src": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Women's blazer custom tailored Mumbai",
+    "category": "Women's Apparel",
+    "label": "Blazer"
+  },
+  {
+    "id": 69,
+    "src": "/images/uploads/gallery-69-1779005623490.jpeg",
+    "thumb": "/images/uploads/gallery-69-1779005623490.jpeg",
+    "alt": "Fashion blazer stitched Santacruz Mumbai",
+    "category": "Women's Apparel",
+    "label": "Blazer"
+  },
+  {
+    "id": 70,
+    "src": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Professional blazer custom tailored Mumbai",
+    "category": "Women's Apparel",
+    "label": "Blazer"
+  },
+  {
+    "id": 71,
+    "src": "https://images.unsplash.com/photo-1583846717393-dc2412c95ed7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1583846717393-dc2412c95ed7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Casual tops custom stitched Mumbai tailor",
+    "category": "Women's Apparel",
+    "label": "Tops"
+  },
+  {
+    "id": 72,
+    "src": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Women's fashion tops tailored Santacruz",
+    "category": "Women's Apparel",
+    "label": "Tops"
+  },
+  {
+    "id": 73,
+    "src": "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1506629082955-511b1aa562c8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Women's bottoms trousers custom stitched Mumbai",
+    "category": "Women's Apparel",
+    "label": "Bottoms"
+  },
+  {
+    "id": 76,
+    "src": "/images/uploads/gallery-76-1779004772654.jpeg",
+    "thumb": "/images/uploads/gallery-76-1779004772654.jpeg",
+    "alt": "womens kurta custom tailored women Mumbai",
+    "category": "Women's Apparel",
+    "label": "womens kurta"
+  },
+  {
+    "id": 74,
+    "src": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Custom tailored bottoms wide leg pants Mumbai",
+    "category": "Women's Apparel",
+    "label": "Bottoms"
+  },
+  {
+    "id": 77,
+    "src": "/images/uploads/gallery-77-1779006927272.jpeg",
+    "thumb": "/images/uploads/gallery-77-1779006927272.jpeg",
+    "alt": "Punjabi dress salwar kameez custom stitched Mumbai",
+    "category": "Women's Apparel",
+    "label": "Punjabi Dress"
+  },
+  {
+    "id": 12,
+    "src": "/images/uploads/gallery-12-1778875540006.jpeg",
+    "thumb": "/images/uploads/gallery-12-1778875540006.jpeg",
+    "alt": "Formal dress shirt custom stitched Santacruz",
+    "category": "Men's Apparel",
+    "label": "Shirt"
+  },
+  {
+    "id": 13,
+    "src": "https://images.unsplash.com/photo-1602810316693-3667c854239a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1602810316693-3667c854239a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Classic tailored shirt men's fashion Mumbai",
+    "category": "Men's Apparel",
+    "label": "Shirt"
+  },
+  {
+    "id": 16,
+    "src": "/images/uploads/gallery-16-1779005420556.jpeg",
+    "thumb": "/images/uploads/gallery-16-1779005420556.jpeg",
+    "alt": "Classic tailored trousers men formal wear",
+    "category": "Men's Apparel",
+    "label": "Trousers"
+  },
+  {
+    "id": 17,
+    "src": "https://images.unsplash.com/photo-1576470189712-50fe3ec06b04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1576470189712-50fe3ec06b04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Traditional Indian kurta custom stitched Mumbai",
+    "category": "Men's Apparel",
+    "label": "Kurta"
+  },
+  {
+    "id": 18,
+    "src": "/images/uploads/gallery-18-1779004699750.jpeg",
+    "thumb": "/images/uploads/gallery-18-1779004699750.jpeg",
+    "alt": "Cotton kurta Indian men ethnic wear Santacruz",
+    "category": "Men's Apparel",
+    "label": "Kurta"
+  },
+  {
+    "id": 21,
+    "src": "/images/uploads/gallery-21-1779005119193.jpeg",
+    "thumb": "/images/uploads/gallery-21-1779005119193.jpeg",
+    "alt": "Nehru jacket bandi Indian men ethnic tailored",
+    "category": "Men's Apparel",
+    "label": "Bandi (Nehru Jacket)"
+  },
+  {
+    "id": 22,
+    "src": "/images/uploads/gallery-22-1779005142318.jpeg",
+    "thumb": "/images/uploads/gallery-22-1779005142318.jpeg",
+    "alt": "Indian Nehru collar bandi vest custom stitched",
+    "category": "Men's Apparel",
+    "label": "Bandi (Nehru Jacket)"
+  },
+  {
+    "id": 24,
+    "src": "/images/uploads/gallery-24-1779005576418.jpeg",
+    "thumb": "/images/uploads/gallery-24-1779005576418.jpeg",
+    "alt": "Classic blazer tailored Santacruz Mumbai",
+    "category": "Men's Apparel",
+    "label": "Blazer"
+  },
+  {
+    "id": 25,
+    "src": "/images/uploads/gallery-25-1779005582090.jpeg",
+    "thumb": "/images/uploads/gallery-25-1779005582090.jpeg",
+    "alt": "Men's blazer suit tailored Mumbai Santacruz",
+    "category": "Men's Apparel",
+    "label": "Blazer"
+  },
+  {
+    "id": 26,
+    "src": "/images/uploads/gallery-26-1779005661890.jpeg",
+    "thumb": "/images/uploads/gallery-26-1779005661890.jpeg",
+    "alt": "Custom tailored grey suit 2-piece Mumbai",
+    "category": "Men's Apparel",
+    "label": "Suit (2-piece)"
+  },
+  {
+    "id": 27,
+    "src": "/images/uploads/gallery-27-1779005408892.jpeg",
+    "thumb": "/images/uploads/gallery-27-1779005408892.jpeg",
+    "alt": "Two piece suit tailored Santacruz East Mumbai",
+    "category": "Men's Apparel",
+    "label": "Suit (2-piece)"
+  },
+  {
+    "id": 28,
+    "src": "/images/uploads/gallery-28-1779005518046.jpeg",
+    "thumb": "/images/uploads/gallery-28-1779005518046.jpeg",
+    "alt": "Classic 2-piece suit custom stitched Mumbai tailor",
+    "category": "Men's Apparel",
+    "label": "Suit (2-piece)"
+  },
+  {
+    "id": 23,
+    "src": "/images/uploads/gallery-23-1779005432878.jpeg",
+    "thumb": "/images/uploads/gallery-23-1779005432878.jpeg",
+    "alt": "trouser custom tailored men Mumbai",
+    "category": "Men's Apparel",
+    "label": "trouser"
+  },
+  {
+    "id": 15,
+    "src": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Suits custom tailored men Mumbai",
+    "category": "Men's Apparel",
+    "label": "Suits"
+  },
+  {
+    "id": 14,
+    "src": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Suit custom tailored men Mumbai",
+    "category": "Men's Apparel",
+    "label": "Suit"
+  },
+  {
+    "id": 29,
+    "src": "/images/uploads/gallery-29-1779003403588.jpeg",
+    "thumb": "/images/uploads/gallery-29-1779003403588.jpeg",
+    "alt": "Kids Frock / Dress custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Frock / Dress"
+  },
+  {
+    "id": 30,
+    "src": "/images/uploads/gallery-30-1779003358113.jpeg",
+    "thumb": "/images/uploads/gallery-30-1779003358113.jpeg",
+    "alt": "Kids Frock / Dress custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Frock / Dress"
+  },
+  {
+    "id": 33,
+    "src": "/images/uploads/gallery-33-1779004458128.jpeg",
+    "thumb": "/images/uploads/gallery-33-1779004458128.jpeg",
+    "alt": "Kids Kurta Pyjama custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Kurta Pyjama"
+  },
+  {
+    "id": 34,
+    "src": "https://images.unsplash.com/photo-1561987619-1c9a98f83752?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1561987619-1c9a98f83752?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Kids Kurta Pyjama custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Kurta Pyjama"
+  },
+  {
+    "id": 35,
+    "src": "/images/uploads/gallery-35-1779004606603.jpeg",
+    "thumb": "/images/uploads/gallery-35-1779004606603.jpeg",
+    "alt": "Kids Lehenga Choli custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Lehenga Choli"
+  },
+  {
+    "id": 36,
+    "src": "/images/uploads/gallery-36-1779004577952.jpeg",
+    "thumb": "/images/uploads/gallery-36-1779004577952.jpeg",
+    "alt": "Kids Lehenga Choli custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Lehenga Choli"
+  },
+  {
+    "id": 37,
+    "src": "/images/uploads/gallery-37-1779003304067.jpeg",
+    "thumb": "/images/uploads/gallery-37-1779003304067.jpeg",
+    "alt": "Kids Sherwani custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Sherwani"
+  },
+  {
+    "id": 38,
+    "src": "/images/uploads/gallery-38-1779003080943.jpeg",
+    "thumb": "/images/uploads/gallery-38-1779003080943.jpeg",
+    "alt": "Kids Sherwani custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Sherwani"
+  },
+  {
+    "id": 41,
+    "src": "/images/uploads/gallery-41-1779003333158.jpeg",
+    "thumb": "/images/uploads/gallery-41-1779003333158.jpeg",
+    "alt": "Kids Party Wear custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Party Wear"
+  },
+  {
+    "id": 42,
+    "src": "/images/uploads/gallery-42-1779003998848.jpeg",
+    "thumb": "/images/uploads/gallery-42-1779003998848.jpeg",
+    "alt": "Kids Party Wear custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Kids Party Wear"
+  },
+  {
+    "id": 43,
+    "src": "https://images.unsplash.com/photo-1600792175842-4fa8ae4b36ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1600792175842-4fa8ae4b36ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "School / Uniform Stitching custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "School / Uniform Stitching"
+  },
+  {
+    "id": 44,
+    "src": "/images/uploads/gallery-44-1779004349524.jpeg",
+    "thumb": "/images/uploads/gallery-44-1779004349524.jpeg",
+    "alt": "School / Uniform Stitching custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "School / Uniform Stitching"
+  },
+  {
+    "id": 46,
+    "src": "/images/uploads/gallery-46-1779004929634.jpeg",
+    "thumb": "/images/uploads/gallery-46-1779004929634.jpeg",
+    "alt": "Groom's Sherwani custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Groom's Sherwani"
+  },
+  {
+    "id": 47,
+    "src": "/images/uploads/gallery-47-1779005963246.jpeg",
+    "thumb": "/images/uploads/gallery-47-1779005963246.jpeg",
+    "alt": "Groom's Sherwani custom tailored kids Mumbai",
+    "category": "Kids Wear",
+    "label": "Groom's Sherwani"
+  },
+  {
+    "id": 48,
+    "src": "/images/uploads/gallery-48-1779004971603.jpeg",
+    "thumb": "/images/uploads/gallery-48-1779004971603.jpeg",
+    "alt": "Groom's Sherwani custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Groom's Sherwani"
+  },
+  {
+    "id": 50,
+    "src": "/images/uploads/gallery-50-1779004863978.jpeg",
+    "thumb": "/images/uploads/gallery-50-1779004863978.jpeg",
+    "alt": "Wedding Kurta Set custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Wedding Kurta Set"
+  },
+  {
+    "id": 52,
+    "src": "https://images.unsplash.com/photo-1610047402714-307d99a677db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080",
+    "thumb": "https://images.unsplash.com/photo-1610047402714-307d99a677db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600",
+    "alt": "Bridal Lehenga custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Bridal Lehenga"
+  },
+  {
+    "id": 53,
+    "src": "/images/uploads/gallery-53-1779005062978.jpeg",
+    "thumb": "/images/uploads/gallery-53-1779005062978.jpeg",
+    "alt": "Bridal Lehenga custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Bridal Lehenga"
+  },
+  {
+    "id": 54,
+    "src": "/images/uploads/gallery-54-1779005004502.jpeg",
+    "thumb": "/images/uploads/gallery-54-1779005004502.jpeg",
+    "alt": "Bridal Lehenga custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Bridal Lehenga"
+  },
+  {
+    "id": 55,
+    "src": "/images/uploads/gallery-55-1779003212969.jpeg",
+    "thumb": "/images/uploads/gallery-55-1779003212969.jpeg",
+    "alt": "Bridesmaid Outfits custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Bridesmaid Outfits"
+  },
+  {
+    "id": 56,
+    "src": "/images/uploads/gallery-56-1779003242039.jpeg",
+    "thumb": "/images/uploads/gallery-56-1779003242039.jpeg",
+    "alt": "Bridesmaid Outfits custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Bridesmaid Outfits"
+  },
+  {
+    "id": 59,
+    "src": "/images/uploads/gallery-59-1779003941348.jpeg",
+    "thumb": "/images/uploads/gallery-59-1779003941348.jpeg",
+    "alt": "Kids Wedding Wear custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Kids Wedding Wear"
+  },
+  {
+    "id": 60,
+    "src": "/images/uploads/gallery-60-1779003888482.jpeg",
+    "thumb": "/images/uploads/gallery-60-1779003888482.jpeg",
+    "alt": "Kids Wedding Wear custom tailored wedding Mumbai",
+    "category": "Wedding Wear",
+    "label": "Kids Wedding Wear"
+  }
+]

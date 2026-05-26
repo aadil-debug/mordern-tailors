@@ -2,10 +2,11 @@ import { createServer } from 'http';
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { join, extname } from 'path';
 import { existsSync, statSync, createReadStream } from 'fs';
-const PORT = 5000;
+
+const PORT = process.env.PORT || 5000;
 const DIST = './dist';
+const DATA_DIR = './data';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'fazal1234';
-const DB_URL = process.env.REPLIT_DB_URL;
 
 const mimeTypes = {
   '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript',
@@ -17,25 +18,26 @@ const mimeTypes = {
   '.mov': 'video/quicktime', '.ogg': 'video/ogg',
 };
 
-// ── Replit DB helpers ────────────────────────────────────────────────────────
+// ── JSON file DB helpers ──────────────────────────────────────────────────────
+async function ensureDataDir() {
+  await mkdir(DATA_DIR, { recursive: true });
+}
+
 async function dbGet(key) {
-  if (!DB_URL) return null;
   try {
-    const res = await fetch(`${DB_URL}/${encodeURIComponent(key)}`);
-    if (res.status === 404) return null;
-    const text = await res.text();
-    return JSON.parse(decodeURIComponent(text));
+    await ensureDataDir();
+    const filePath = join(DATA_DIR, `${key}.json`);
+    if (!existsSync(filePath)) return null;
+    const text = await readFile(filePath, 'utf8');
+    return JSON.parse(text);
   } catch { return null; }
 }
 
 async function dbSet(key, value) {
-  if (!DB_URL) return;
   try {
-    await fetch(DB_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(value))}`,
-    });
+    await ensureDataDir();
+    const filePath = join(DATA_DIR, `${key}.json`);
+    await writeFile(filePath, JSON.stringify(value, null, 2), 'utf8');
   } catch (e) { console.error('DB write error:', e.message); }
 }
 
@@ -83,16 +85,6 @@ function patchGalleryJS(content, items) {
 }
 
 // ── Request helpers ──────────────────────────────────────────────────────────
-function parseCookies(cookieHeader) {
-  const cookies = {};
-  if (!cookieHeader) return cookies;
-  cookieHeader.split(';').forEach(c => {
-    const [k, ...v] = c.trim().split('=');
-    cookies[k.trim()] = v.join('=');
-  });
-  return cookies;
-}
-
 function isAuthenticated(req) {
   const auth = req.headers['authorization'] || '';
   if (auth.startsWith('Bearer ')) {
@@ -177,13 +169,11 @@ const server = createServer(async (req, res) => {
     await writeFile(join(uploadDir, safeFileName), Buffer.from(fileData, 'base64'));
     const newSrc = `/images/uploads/${safeFileName}`;
 
-    // Update DB
     const items = await loadGalleryItems();
     const idx = items.findIndex(it => it.id === parseInt(itemId));
     if (idx >= 0) { items[idx].src = newSrc; items[idx].thumb = newSrc; }
     await dbSet('gallery_items', items);
 
-    // Also patch the JS file so dev environment stays in sync
     let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
     jsContent = jsContent.replace(
       new RegExp(`(\\{id:${itemId},src:)"([^"]+)"(,thumb:)"([^"]+)"`, 'g'),
@@ -207,14 +197,11 @@ const server = createServer(async (req, res) => {
     const idToItem = {};
     items.forEach(it => idToItem[it.id] = it);
     const reordered = order.map(id => idToItem[id]).filter(Boolean);
-    // Append any items not included in order
     const included = new Set(order);
     items.forEach(it => { if (!included.has(it.id)) reordered.push(it); });
 
-    // Save to DB
     await dbSet('gallery_items', reordered);
 
-    // Also patch the JS file so dev environment stays in sync
     let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
     const itemRx = /\{id:(\d+),src:"[^"]+",thumb:"[^"]+",alt:"[^"]+",category:"[^"]+",label:"[^"]+"\}/g;
     const allMatches = [...jsContent.matchAll(itemRx)];
@@ -235,7 +222,7 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // AI reimagine — return Pollinations URL for browser to load directly
+  // AI reimagine
   if (urlPath === '/admin/ai-reimagine' && method === 'POST') {
     if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
     const body = await parseBody(req);
@@ -299,7 +286,6 @@ const server = createServer(async (req, res) => {
     return;
   }
 
-  // Update item label/category
   // Public badge data endpoint
   if (urlPath === '/gallery-badges' && method === 'GET') {
     const items = await loadGalleryItems();
@@ -309,6 +295,7 @@ const server = createServer(async (req, res) => {
     return;
   }
 
+  // Update item label/category
   if (urlPath === '/admin/update-item' && method === 'POST') {
     if (!isAuthenticated(req)) { res.writeHead(401); res.end(JSON.stringify({ error: 'Unauthorized' })); return; }
     const body = await parseBody(req);
@@ -339,11 +326,9 @@ const server = createServer(async (req, res) => {
     const { itemId } = body;
     if (!itemId) { res.writeHead(400); res.end(JSON.stringify({ ok: false, error: 'Missing itemId' })); return; }
     const id = parseInt(itemId);
-    // Remove from DB
     const items = await loadGalleryItems();
     const filtered = items.filter(it => it.id !== id);
     await dbSet('gallery_items', filtered);
-    // Remove from JS bundle
     let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
     const withPrev = new RegExp(`,\\{id:${id},src:"[^"]+",thumb:"[^"]+",alt:"[^"]+",category:"[^"]+",label:"[^"]+"\}`);
     if (withPrev.test(jsContent)) {
@@ -378,7 +363,6 @@ const server = createServer(async (req, res) => {
     const newItem = { id: newId, src: newSrc, thumb: newSrc, alt: altText, category, label };
     items.push(newItem);
     await dbSet('gallery_items', items);
-    // Also inject into JS bundle for dev sync
     let jsContent = await readFile(join(DIST, 'assets/index.js'), 'utf8');
     const itemRx2 = /\{id:\d+,src:"[^"]+",thumb:"[^"]+",alt:"[^"]+",category:"[^"]+",label:"[^"]+"\}/g;
     const ms = [...jsContent.matchAll(itemRx2)];
@@ -400,7 +384,6 @@ const server = createServer(async (req, res) => {
       const urlParams = new URLSearchParams(req.url.split('?')[1] || '');
       const keyParam = urlParams.get('key') || '';
       let html = (await readFile(join(DIST, 'admin.html'))).toString();
-      // Inject auto-login script if correct key in URL
       if (keyParam === ADMIN_PASSWORD) {
         html = html.replace('</head>', `<script>localStorage.setItem('mt_admin_token','${ADMIN_PASSWORD}');</script></head>`);
       }
@@ -469,5 +452,5 @@ const server = createServer(async (req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running at http://0.0.0.0:${PORT}`);
-  console.log(`Replit DB: ${DB_URL ? 'connected' : 'not available'}`);
+  console.log(`Data stored in: ${DATA_DIR}/`);
 });
