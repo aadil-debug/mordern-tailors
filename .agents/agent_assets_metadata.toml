@@ -22,10 +22,10 @@ title = "Modern Tailors Website"
 id = "0Qx29bcOtSJaZA1-MowjO"
 uri = "file://modern-tailors-hostinger.zip"
 type = "unspecified"
-title = "Modern Tailors — Hostinger Deployment Package"
+title = "Modern Tailors — Hostinger (updated)"
 
 [[outputs]]
 id = "CRNZ1cuyHefzfZ-sxLDZK"
 uri = "file://modern-tailors-netlify.zip"
 type = "unspecified"
-title = "Modern Tailors — Netlify Deployment Package"
+title = "Modern Tailors — Netlify (updated)"
