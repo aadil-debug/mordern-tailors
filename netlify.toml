@@ -1,0 +1,20 @@
+[build]
+  publish = "dist"
+  functions = "netlify/functions"
+
+# Serve dynamic endpoints via Netlify Functions
+[[redirects]]
+  from = "/offers"
+  to = "/.netlify/functions/offers"
+  status = 200
+
+[[redirects]]
+  from = "/gallery-badges"
+  to = "/.netlify/functions/gallery-badges"
+  status = 200
+
+# SPA fallback — all other routes serve index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
