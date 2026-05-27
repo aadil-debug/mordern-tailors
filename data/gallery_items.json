@@ -502,5 +502,38 @@
     "alt": "Kids Wedding Wear custom tailored wedding Mumbai",
     "category": "Wedding Wear",
     "label": "Kids Wedding Wear"
+  },
+  {
+    "id": 78,
+    "src": "/images/uploads/gallery-78-1779879077734.jpeg",
+    "thumb": "/images/uploads/gallery-78-1779879077734.jpeg",
+    "alt": "Suit custom tailored Men's Apparel Mumbai",
+    "category": "Men's Apparel",
+    "label": "Suit"
+  },
+  {
+    "id": 79,
+    "src": "/images/uploads/gallery-79-1779879153891.jpeg",
+    "thumb": "/images/uploads/gallery-79-1779879153891.jpeg",
+    "alt": "Suit custom tailored Men's Apparel Mumbai",
+    "category": "Men's Apparel",
+    "label": "Suit",
+    "badge": "Sale"
+  },
+  {
+    "id": 80,
+    "src": "/images/uploads/gallery-80-1779879473894.jpeg",
+    "thumb": "/images/uploads/gallery-80-1779879473894.jpeg",
+    "alt": "Suit custom tailored Men's Apparel Mumbai",
+    "category": "Men's Apparel",
+    "label": "Suit"
+  },
+  {
+    "id": 81,
+    "src": "/images/uploads/gallery-81-1779879626413.jpeg",
+    "thumb": "/images/uploads/gallery-81-1779879626413.jpeg",
+    "alt": "suit custom tailored Men's Apparel Mumbai",
+    "category": "Men's Apparel",
+    "label": "suit"
   }
 ]
