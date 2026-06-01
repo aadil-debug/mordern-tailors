@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: modern-tailors
+    runtime: node
+    buildCommand: echo "No build step"
+    startCommand: node server.js
+    envVars:
+      - key: ADMIN_PASSWORD
+        sync: false

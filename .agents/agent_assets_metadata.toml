@@ -29,3 +29,9 @@ id = "CRNZ1cuyHefzfZ-sxLDZK"
 uri = "file://modern-tailors-netlify.zip"
 type = "unspecified"
 title = "Modern Tailors — Netlify (updated)"
+
+[[outputs]]
+id = "7cdgqOK88DsKBrdjsMSBi"
+uri = "file://modern-tailors-render.zip"
+type = "unspecified"
+title = "Modern Tailors — Render Deployment Package"
