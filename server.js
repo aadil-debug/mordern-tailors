@@ -409,8 +409,11 @@ const server = createServer(async (req, res) => {
 
   // Static files
   let filePath = join(DIST, urlPath);
-  if (!existsSync(filePath) || statSync(filePath).isDirectory()) {
+  if (!existsSync(filePath)) {
     filePath = join(DIST, 'index.html');
+  } else if (statSync(filePath).isDirectory()) {
+    const dirIndex = join(filePath, 'index.html');
+    filePath = existsSync(dirIndex) ? dirIndex : join(DIST, 'index.html');
   }
   try {
     const ext = extname(filePath);
