@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "python-3.11"]
+modules = ["nodejs-18"]
 
 [workflows]
 runButton = "Project"
@@ -39,4 +39,7 @@ stack = "BEST_EFFORT_FALLBACK"
 [deployment]
 deploymentTarget = "autoscale"
 run = ["node", "server.js"]
+
+[nix]
+channel = "stable-25_05"
 
